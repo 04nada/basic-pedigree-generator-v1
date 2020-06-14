@@ -1,0 +1,13 @@
+var test1 = new Person("male");
+test1.addAutosomalGene("gene1", "Aa");
+test1.addAutosomalGene("gene2", "BB");
+test1.addAutosomalGene("gene3", "cc");
+test1.addAutosomalGene("gene4", "Dd");
+
+var test2 = new Person("female");
+test2.addAutosomalGene("gene1", "AA");
+test2.addAutosomalGene("gene2", "Bb");
+test2.addAutosomalGene("gene3", "Cc");
+test2.addAutosomalGene("gene4", "Dd");
+
+makeChild(test1, test2);
