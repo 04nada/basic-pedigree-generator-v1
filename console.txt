@@ -1,13 +1,21 @@
-var test1 = new Person("male");
-test1.addAutosomalGene("gene1", "Aa");
-test1.addAutosomalGene("gene2", "BB");
-test1.addAutosomalGene("gene3", "cc");
-test1.addAutosomalGene("gene4", "Dd");
+defineAutosomalTrait("trait1", "A", "a");
+defineAutosomalTrait("trait2", "B", "b");
+defineAutosomalTrait("trait3", "C", "c");
+defineAutosomalTrait("trait4", "D", "d");
 
-var test2 = new Person("female");
-test2.addAutosomalGene("gene1", "AA");
-test2.addAutosomalGene("gene2", "Bb");
-test2.addAutosomalGene("gene3", "Cc");
-test2.addAutosomalGene("gene4", "Dd");
+var test1 = new Person();
+test1.init1(undefined, "male");
+test1.addAutosomalGene("trait1", "Aa");
+test1.addAutosomalGene("trait2", "BB");
+test1.addAutosomalGene("trait3", "cc");
+test1.addAutosomalGene("trait4", "Dd");
 
-makeChild(test1, test2);
+var test2 = new Person();
+test2.init1(undefined,"female")
+test2.addAutosomalGene("trait1", "AA");
+test2.addAutosomalGene("trait2", "Bb");
+test2.addAutosomalGene("trait3", "Cc");
+test2.addAutosomalGene("trait4", "Dd");
+
+Person.marry(test1, test2);
+Person.haveChildren(test1, test2);
