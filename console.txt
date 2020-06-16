@@ -3,19 +3,17 @@ defineAutosomalTrait("trait2", "B", "b");
 defineAutosomalTrait("trait3", "C", "c");
 defineAutosomalTrait("trait4", "D", "d");
 
-var test1 = new Person();
-test1.init1(undefined, "male");
+var test1 = new Person(1, "male");
 test1.addAutosomalGene("trait1", "Aa");
 test1.addAutosomalGene("trait2", "BB");
 test1.addAutosomalGene("trait3", "cc");
 test1.addAutosomalGene("trait4", "Dd");
 
-var test2 = new Person();
-test2.init1(undefined,"female")
+var test2 = new Person(1, "female")
 test2.addAutosomalGene("trait1", "AA");
 test2.addAutosomalGene("trait2", "Bb");
 test2.addAutosomalGene("trait3", "Cc");
 test2.addAutosomalGene("trait4", "Dd");
 
-Person.marry(test1, test2);
+test1.tryToMarry();
 Person.haveChildren(test1, test2);
