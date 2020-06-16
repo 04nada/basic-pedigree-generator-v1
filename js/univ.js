@@ -49,3 +49,7 @@ function getRandomValueByProbability(obj_probabilityTable) {
 function logError(source, message) {
 	console.log("<" + source + "> ERROR: " + message);
 }
+
+function logDebug(source, message) {
+	console.log("<" + source + "> DEBUG: " + message);
+}
