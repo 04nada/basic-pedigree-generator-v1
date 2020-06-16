@@ -1,27 +1,27 @@
-//--- ----- Person prototype
+//--- --- Global Constants
 
+// chances of a Person getting married if a Partner is not specified
+const GenerationalSoloMarriage = [
+	1.00,
+	0.70,
+	0.30,
+	0.00
+]
+
+// chances of a married couple having 0-3 Children, per Generation
 const GenerationalFertility = [
 	[0.00, 0.20, 0.40, 0.40],
-	[0.50, 0.30, 0.15, 0.05],
-	[0.60, 0.20, 0.20, 0.00],
+	[0.15, 0.30, 0.30, 0.15],
+	[0.30, 0.35, 0.35, 0.00],
 	[1.00, 0.00, 0.00, 0.00]
 ];
 
+// Generations go from 1 to 4
+const MaxGeneration = 4;
 
-// default Person "constructor"
-function Person() {
-	this.AutosomalGenes = {};
-	
-	// can/will cause circular referencing
-	this.Mother = undefined; // {}
-	this.Father = undefined; // {}
-	this.Partner = undefined; // {}
-	this.Children = undefined; // [{}]
-}
+//--- ----- Person prototype
 
-//--- Person "constructors" (since JS doesn't support multiple constructors)
-
-Person.prototype.init1 = function(generation = 1, sex = Person.generateRandomSex()) {
+function Person(generation = 1, sex = Person.generateRandomSex()) {
 	this.Generation = generation;
 	
 	//---
@@ -40,7 +40,21 @@ Person.prototype.init1 = function(generation = 1, sex = Person.generateRandomSex
 			logError("Person.init()", "SexChromosomes failed to assign properly.");
 			break;
 	}
+	
+	//---
+	
+	this.AutosomalGenes = {};
+	
+	//---
+	
+	// can/will cause circular referencing
+	this.Mother = undefined; // {}
+	this.Father = undefined; // {}
+	this.Partner = undefined; // {}
+	this.Children = undefined; // [{}]
 }
+
+//--- Person 
 
 Person.generateRandomSex = function() {
 	var int_MF = getRandomInteger(0, 1);
@@ -61,7 +75,7 @@ Person.generateRandomGenes = function() {
 	return autosomalGenes;
 }
 
-//--- Person gene functions
+//--- Person Gene functions
 
 Person.prototype.addAutosomalGene = function(definedTrait, gene) {
 	if (!(definedTrait in DefinedAutosomalTraits)) {
@@ -91,36 +105,58 @@ Person.prototype.getRandomAlleles = function() {
 	return arr_alleles;
 }
 
-//--- Familial Growth
+//--- Familial Growth (Marriage, Children)
 
-Person.marry = function(partner1, partner2 = null) {
-	if (partner2 == null) {
-		let sexOfPartner2 = (partner1.Sex === "female") ? "male" : "female";
+Person.prototype.tryToMarry = function() {
+	var chanceOfSoloMarrying = GenerationalSoloMarriage[this.Generation - 1];
 		
-		partner2 = new Person();
-		partner2.init1(partner1.Generation, sexOfPartner2);
-		partner2.AutosomalGenes = Person.generateRandomGenes();
-	}
+	var choseToMarry = (getRandomValueByProbability({
+		"married": chanceOfSoloMarrying,
+		"unmarried": (1 - chanceOfSoloMarrying)
+	}) == "married");
 	
-	partner1.Partner = partner2;
-	partner2.Partner = partner1;
+	if (choseToMarry) {
+		let sexOfPartner = (this.Sex === "female") ? "male" : "female";
+		
+		var partner = new Person(this.Generation, sexOfPartner);
+		partner.AutosomalGenes = Person.generateRandomGenes();
+		
+		Person.marry(this, partner);
+		
+		return true;
+	} else {
+		//logDebug("Person.prototype.tryToMarry()", "Solo person chose not to get married.");
+		return false;
+	}
+}
+
+Person.marry = function(person1, person2) {
+	person1.Partner = person2;
+	person2.Partner = person1;
 }
 
 Person.haveChildren = function(partner1, partner2) {
-	if ((partner1.Partner != partner2) || (partner2.Partner == partner1)) {
+	if ((partner1.Partner !== partner2) || (partner2.Partner !== partner1)) {
 		logError("Person.haveChildren()", "Persons chosen to have children are not partners.");
+	} else if (partner1.Sex === partner2.Sex) {
+		let numberOfChildren = 0;
+		
+		partner1.Children = [];
+		partner2.Children = [];
+		
+		//console.log("Number of Children: " + numberOfChildren);
+		
+		return partner1.Children;
 	} else {
 		// The parents can have 0-3 children; later generations are less likely to have children
 		var obj_randomNumberOfChildren = {};
 	
-		var fertilityConstant = partner1.Generation - 1; //index ranges from 0 to 3
-	
 		// this generates an object that pairs a number to its probability (e.g. {0: 0.35, 1: 0.30, 2: 0.20, 3: 0.15
 		for (let i = 0; i <= 3; i++) {
-			obj_randomNumberOfChildren[i.toString()] = GenerationalFertility[fertilityConstant][i];
+			obj_randomNumberOfChildren[i.toString()] = GenerationalFertility[partner1.Generation-1][i];
 		}
 	
-		var numberOfChildren = getRandomValueByProbability(obj_randomNumberOfChildren);
+		let numberOfChildren = getRandomValueByProbability(obj_randomNumberOfChildren);
 		
 		//---
 		
@@ -131,7 +167,10 @@ Person.haveChildren = function(partner1, partner2) {
 			Person.makeChild(partner1, partner2);
 		}
 		
+		console.log("Generation: " + partner1.Generation);
 		console.log("Number of Children: " + numberOfChildren);
+		
+		return partner1.Children;
 	}
 }
 
@@ -140,19 +179,19 @@ Person.makeChild = function(person1, person2) {
 	var arr_parentAlleles2 = person2.getRandomAlleles();
 	
 	//--- Choosing random inherited genes for the Child
+	
 	var arr_traits = Object.keys(DefinedAutosomalTraits);
 	var arr_genes = [];
 	var numberOfGenes = arr_traits.length;
 	
 	for (let i = 0; i < numberOfGenes; i++) {		
-		arr_genes[i] = arr_parentAlleles1[i] + arr_parentAlleles2[i];
+		arr_genes[i] = "" + arr_parentAlleles1[i] + arr_parentAlleles2[i];
 		arr_genes[i] = arr_genes[i].split("").sort().join("");
 	}
 	
 	//--- Making the Child
 	
-	var child = new Person();
-	child.init1(person1.Generation+1, undefined);
+	var child = new Person(person1.Generation+1, undefined);
 	
 	// Adding randomly generated AutosomalGenes to child
 	for (let i = 0; i < numberOfGenes; i++) {
