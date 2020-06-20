@@ -36,12 +36,47 @@ function getRandomValueByProbability(obj_probabilityTable) {
 	for (let i = 0; i < numberOfNumbers; i++) {
 		lowerBound = upperBound;
 		upperBound += arr_probabilities[i];
-				
+		
 		if ((randomNumber >= lowerBound) && (randomNumber < upperBound))
 			return arr_values[i];
 	}
 	
 	logError("getRandomValueByProbability()", "Random value failed to generate.");
+}
+
+Number.prototype.toRomanNumerals = function() {
+	var romanNumeral = "";
+	arabicNumeral = this;
+	
+	var lookupAR = {
+		"01000": "M",
+		"0900": "CM",
+		"0500": "D",
+		"0400": "CD",
+		"0100": "C",
+		"090": "XC",
+		"050": "L",
+		"040": "XL",
+		"010": "X",
+		"09": "IX",
+		"05": "V",
+		"04": "IV",
+		"01": "I"
+	}
+		
+	while (arabicNumeral !== 0) {
+		for (let a in lookupAR) {
+			let a2 = parseInt(a);
+			
+			if (a2 <= arabicNumeral) {
+				romanNumeral += lookupAR[a];
+				arabicNumeral -= a2;
+				break;
+			}	
+		}
+	}
+	
+	return romanNumeral;
 }
 
 //--- ----- Misc
