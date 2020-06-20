@@ -1,33 +1,10 @@
-//--- ----- Generating a Family
+$(document).ready(function() {
+	
+});
 
-function generateFamily() {
-	var Grandfather = new Person(1, "male");
-	var Grandmother = new Person(1, "female");
-	
-	Grandfather.AutosomalGenes = Person.generateRandomGenes();
-	Grandmother.AutosomalGenes = Person.generateRandomGenes();
-	
-	Person.marry(Grandfather, Grandmother);
-	Person.haveChildren(Grandfather, Grandmother);
-	
-	for (let child of Grandfather.Children) {
-		continueFamily(child);
-	}
-	
-	return Grandfather;
-}
+//--- -----
 
-// recursive magic
-function continueFamily(person) {
-	if (person.Generation <= MaxGeneration) {
-		var personIsMarried = person.tryToMarry();
-		
-		if (personIsMarried) {
-			Person.haveChildren(person, person.Partner);
-			
-			for (let child of person.Children) {
-				continueFamily(child);
-			}
-		}
-	}
-}
+const eyeColor = new AutosomalTrait("eye color", 'B', 'b', "brown eyes", "blue eyes");
+const widowsPeak = new AutosomalTrait("widow's peak", 'W', 'w', "widow's peak present", "widow's peak absent");
+
+//---
