@@ -1,8 +1,8 @@
 //--- ----- Symbol prototype
 
-const SYMBOL_LENGTH_px = 64;
+const SYMBOL_LENGTH_px = 40;
 
-function Symbol(person, activeTraitName, x = getRandomInteger(50, 250)) {
+function Symbol(person, activeTraitName, x = 0) {
 	if (!(activeTraitName in DefinedAutosomalTraits)) {
 		logError(this.name, "Cannot draw symbol for undefined trait.");
 	} else {
@@ -50,9 +50,22 @@ function Symbol(person, activeTraitName, x = getRandomInteger(50, 250)) {
 	}
 }
 
-Symbol.prototype.setPosition = function(x) {
+Symbol.prototype.setPositionX = function(x) {
 	this.X = x;
 	this.CenterX = this.X + (SYMBOL_LENGTH_px/2);
+	
+	this.PRIV_updateSVGPosition();
+}
+
+Symbol.prototype.translatePositionX = function(dx) {
+	this.X += dx;
+	this.CenterX += dx;
+	
+	if (this.SVG.DescendantLine != null)
+		this.SVG.DescendantLine.translatePosition(dx, 0);
+	
+	if (this.SVG.AncestorLine != null)
+		this.SVG.AncestorLine.translatePosition(dx, 0);
 	
 	this.PRIV_updateSVGPosition();
 }

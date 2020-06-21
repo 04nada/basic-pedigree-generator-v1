@@ -50,6 +50,15 @@ Line.init2 = function(x1, y1, length, direction) {
 	return new Line(x1, y1, (x1 + dx), (y1 + dy));
 }
 
+Line.prototype.PRIV_updateSVGPosition = function() {
+	this.SVG.Element.setAttribute("x1", this.X1);
+	this.SVG.Element.setAttribute("y1", this.Y1);
+	this.SVG.Element.setAttribute("x2", this.X2);
+	this.SVG.Element.setAttribute("y2", this.Y2);
+}
+
+//--- Line transformations
+
 Line.prototype.extend = function(length, direction) {
 	switch (direction) {
 		case "up":
@@ -74,9 +83,14 @@ Line.prototype.extend = function(length, direction) {
 	this.PRIV_updateSVGPosition();
 }
 
-Line.prototype.PRIV_updateSVGPosition = function() {
-	this.SVG.Element.setAttribute("x1", this.X1);
-	this.SVG.Element.setAttribute("y1", this.Y1);
-	this.SVG.Element.setAttribute("x2", this.X2);
-	this.SVG.Element.setAttribute("y2", this.Y2);
+Line.prototype.translatePosition = function(dx, dy) {
+	this.X1 += dx;
+	this.Y1 += dy;
+	this.X2 += dx;
+	this.Y2 += dy;
+	
+	this.CenterX += dx;
+	this.CenterY += dy;
+	
+	this.PRIV_updateSVGPosition();
 }
