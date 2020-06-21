@@ -3,7 +3,7 @@
 // chances of a Person getting married if a Partner is not specified
 const GENERATIONAL_SOLO_MARRIAGE = [
 	1.00,
-	0.70,
+	0.90,
 	0.30,
 	0.00
 ]
@@ -11,7 +11,7 @@ const GENERATIONAL_SOLO_MARRIAGE = [
 // chances of a married couple having 0-3 Children, per Generation
 const GENERATIONAL_FERTILITY = [
 	[0.00, 0.20, 0.40, 0.40],
-	[0.15, 0.30, 0.35, 0.20],
+	[0.00, 0.30, 0.40, 0.30],
 	[0.30, 0.35, 0.35, 0.00],
 	[1.00, 0.00, 0.00, 0.00]
 ];
@@ -197,7 +197,7 @@ Person.marry = function(person1, person2) {
 	if (person1.Generation !== person2.Generation) {
 		logError("Person.marry()", "Persons from different generations cannot be married.");
 	} else if (person1 === person2) {
-		logError("Person.marry()", "Person cannot marry themselves");
+		logError("Person.marry()", "Person cannot marry themselves.");
 	} else {
 		person1.Partner = person2;
 		person2.Partner = person1;
@@ -238,10 +238,12 @@ Person.haveChildren = function(partner1, partner2) {
 			Person.PRIV_makeChild(partner1, partner2);
 		}
 		
+		/*
 		console.log("");
 		console.log("Generation: " + partner1.Generation);
 		console.log("Number of Children: " + numberOfChildren);
 		console.log("");
+		*/
 		
 		return partner1.Children;
 	}
