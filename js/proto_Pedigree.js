@@ -4,21 +4,13 @@ const ACTIVE_TRAIT = "eye color";
 //--- ----- Pedigree prototype
 
 function Pedigree(activeTraitName = ACTIVE_TRAIT) {
-	var FamilyTreeSVG = document.createElementNS("http://www.w3.org/2000/svg", "g");
-	
-	//---
-	
 	this.Family = new Family();
 	
 	for (let f of this.Family.Members) {
 		let s = new Symbol(f, activeTraitName);
-		
-		FamilyTreeSVG.append(s.SVG.Element);
 	}
 	
-	//id_pedigreeSVG.append(FamilyTreeSVG);
-	
-	//grandfather
+	this.Family.Grandfather.Symbol.setPositionX(200);
 }
 
 Pedigree.prototype.appendElement = function(element) {
@@ -27,34 +19,68 @@ Pedigree.prototype.appendElement = function(element) {
 
 //--- Making connections
 
-Pedigree.getConnection = function(symbol1, symbol2) {
-	var connectingLine = new Line(
-		symbol1.CenterX,
-		symbol1.CenterY,
-		symbol2.CenterX,
-		symbol2.CenterY
-	);
-	
-	return connectingLine;
+Pedigree.layoutFamily = function(person1) {
+	if (person1.Generation === MAX_GENERATION) {
+		return;
+	} else {
+		if (person1.Partner == null)
+			return;
+		
+		var person2 = person1.Partner;
+		
+		Pedigree.layoutMarriage(person1, person2);
+		
+		//---
+		
+		var numberOfChildren = person1.Children.length;
+		
+		if (person1.Children == null || numberOfChildren <= 0)
+			return;
+		
+		Pedigree.layoutChildren(person1, person2);
+		
+		for (let i = 0; i < numberOfChildren; i++) {
+			let child = person1.Children[i];
+
+			if ((child.Partner != null) && (i < numberOfChildren-1)) {
+				console.log("EXTEND BY: " + child.PedigreeID);
+				
+				child.Symbol.SVG.SiblingLine.extend(2*SYMBOL_LENGTH_px, "right");
+				
+				for (let j = i+1; j < person1.Children.length; j++) {
+					let nextChild = person1.Children[j];
+
+					nextChild.Symbol.translatePositionX(2*SYMBOL_LENGTH_px);
+				}
+			}	
+			
+			Pedigree.layoutFamily(child);
+		}
+	}
 }
 
 Pedigree.layoutMarriage = function(partner1, partner2) {
 	if ((partner1.Partner !== partner2) || (partner2.Partner !== partner1)) {
-		logError("Symbol.layoutMarriage()", "Persons chosen to draw symbols are not married.");
-	} else {	
+		logError("Pedigree.layoutMarriage()", "Persons chosen to draw symbols are not married.");
+	} else {
 		symbol1 = partner1.Symbol;
 		symbol2 = partner2.Symbol;
 		
 		//--- Marriage Line
 		
-		symbol2.setPosition(symbol1.X + (2*SYMBOL_LENGTH_px));
+		symbol2.setPositionX(symbol1.X + (2*SYMBOL_LENGTH_px));
 		
-		var marriageLine = Pedigree.getConnection(symbol1, symbol2);
+		var marriageLine = new Line(
+			symbol1.CenterX,
+			symbol1.CenterY,
+			symbol2.CenterX,
+			symbol2.CenterY
+		);
 		
 		symbol1.SVG.MarriageLine = marriageLine;
 		symbol2.SVG.MarriageLine = marriageLine;
 		
-		//---
+		//--- Draw to HTML
 		
 		Pedigree.drawMarriage(partner1, partner2);
 	}
@@ -63,6 +89,9 @@ Pedigree.layoutMarriage = function(partner1, partner2) {
 Pedigree.layoutChildren = function(parent1, parent2) {
 	if ((parent1.Partner !== parent2) || (parent2.Partner !== parent1)) {
 		logError("Pedigree.layoutChildren()", "Persons chosen to layout children of are not married.");
+	} else if (parent1.Children == null || parent1.Children.length === 0) {
+		logError("Pedigree.layoutChildren()", "Persons chosen do not have any children to layout.");
+		return;
 	} else {
 		symbol1 = parent1.Symbol;
 		symbol2 = parent2.Symbol;
@@ -79,16 +108,54 @@ Pedigree.layoutChildren = function(parent1, parent2) {
 		symbol1.SVG.DescendantLine = descendantLine;
 		symbol2.SVG.DescendantLine = descendantLine;
 		
-		//--- Ancestor Line (connects each Child Symbol to Sibling Line vertically)
+		//--- Aligning Child Symbols based on parent Symbol positions
 		
 		var numberOfChildren = parent1.Children.length;
 		
+		if (numberOfChildren % 2 === 1) {
+			let center = (numberOfChildren - 1)/2;
+			let centerChild = parent1.Children[center];
+			
+			centerChild.Symbol.setPositionX(symbol1.SVG.DescendantLine.CenterX - (SYMBOL_LENGTH_px/2));
+			
+			for (let i = center-1; i >= 0; i--) {
+				child = parent1.Children[i];
+				
+				child.Symbol.setPositionX(parent1.Children[i+1].Symbol.X - 2*SYMBOL_LENGTH_px);
+			}
+			
+			for (let i = center+1; i < numberOfChildren; i++) {
+				child = parent1.Children[i];
+				
+				child.Symbol.setPositionX(parent1.Children[i-1].Symbol.X + 2*SYMBOL_LENGTH_px);
+			}	
+		} else {
+			let centerL = (numberOfChildren/2) - 1;
+			let centerR = centerL + 1;
+			let centerChildL = parent1.Children[centerL];
+			let centerChildR = parent1.Children[centerR];
+			
+			centerChildL.Symbol.setPositionX(symbol1.X);
+			centerChildR.Symbol.setPositionX(symbol2.X);
+			
+			for (let i = centerL-1; i >= 0; i--) {
+				child = parent1.Children[i];
+				
+				child.Symbol.setPositionX(parent1.Children[i+1].Symbol.X - 2*SYMBOL_LENGTH_px);
+			}
+			
+			for (let i = centerR+1; i < numberOfChildren; i++) {
+				child = parent1.Children[i];
+				
+				child.Symbol.setPositionX(parent1.Children[i-1].Symbol.X + 2*SYMBOL_LENGTH_px);
+			}	
+		}
+			
+		//--- Ancestor Line (connects each Child Symbol to Sibling Line vertically)
+			
 		for (let i = 0; i < numberOfChildren; i++) {
 			child = parent1.Children[i];
-			
-			if (i != 0)
-				child.Symbol.setPosition(parent1.Children[i-1].Symbol.X + (2*SYMBOL_LENGTH_px));
-			
+		
 			let ancestorLine = Line.init2(
 				child.Symbol.CenterX,
 				child.Symbol.CenterY,
@@ -98,7 +165,7 @@ Pedigree.layoutChildren = function(parent1, parent2) {
 			
 			child.Symbol.SVG.AncestorLine = ancestorLine;
 		}
-		
+				
 		//--- Sibling Line (branches out to all children)
 		
 		var siblingLine = new Line(
@@ -111,6 +178,8 @@ Pedigree.layoutChildren = function(parent1, parent2) {
 		for (let child of parent1.Children) {
 			child.Symbol.SVG.SiblingLine = siblingLine;
 		}
+		
+		//--- Draw Children to HTML
 		
 		Pedigree.drawChildren(parent1, parent2);
 	}
@@ -144,7 +213,6 @@ Pedigree.drawChildren = function(parent1, parent2) {
 		
 		id_pedigreeSVG.append(symbol1.SVG.DescendantLine.SVG.Element);
 		
-		console.log(parent1.Children);
 		for (let child of parent1.Children) {
 			id_pedigreeSVG.append(child.Symbol.SVG.AncestorLine.SVG.Element);
 			id_pedigreeSVG.append(child.Symbol.SVG.SiblingLine.SVG.Element);
