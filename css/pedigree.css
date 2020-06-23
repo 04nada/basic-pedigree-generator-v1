@@ -1,7 +1,62 @@
-#id-pedigreeSVG {
-	width: 800px;
-	height: 500px;
+#id-SVGdiv {
+	background-color: beige;
 	
-	border: 1px solid black;
-	padding: 10px;
+	width: 1000px;
+	height: auto;
+	
+	margin: 20px auto;
+	padding: 20px;
+	
+	box-sizing: border-box;
 }
+
+	#id-pedigreeSVG {
+		background-color: white;
+		
+		display: block;
+		width: calc(28 * var(--symbol-length-px));
+		height: calc(2 * var(--NUMBER-OF-GENERATIONS) * var(--symbol-length-px));
+		
+		border: 1px solid black;
+		margin: 20px auto;
+		padding: 0px;
+	}
+	
+	#id-pedigreeButton {
+		display: block;
+		
+		border: 1px solid black;
+		margin: 20px auto;
+	}
+	
+#id-textDiv {
+	background-color: #EEE;
+	
+	width: 1000px;
+	height: auto;
+	
+	margin: 20px auto;
+	padding: 0px;
+	
+	box-sizing: border-box;
+}
+	
+	#id-symbolLegend {
+		background-color: #AEF;
+		
+		width: 40%;
+		height: auto;
+		
+		margin: 0px;
+		padding: 10px;
+	}
+
+		#id-symbolLegend > h2, #id-symbolLegend > h3 {
+			line-height:
+			margin: 0px;
+		}
+	
+		#id-traitName {
+			text-align: center;
+		}
+	
