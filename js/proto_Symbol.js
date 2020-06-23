@@ -1,16 +1,16 @@
 //--- ----- Symbol prototype
 
-const SYMBOL_LENGTH_px = 40;
+const SYMBOL_LENGTH_px = 28;
 
-function Symbol(person, activeTraitName, x = 0) {
-	if (!(activeTraitName in DefinedAutosomalTraits)) {
+function Symbol(person, activeTrait, x = 0) {
+	if (!(activeTrait.TraitName in DefinedAutosomalTraits)) {
 		logError(this.name, "Cannot draw symbol for undefined trait.");
 	} else {
 		personSex = person.Sex;
-		personActiveGene = person.AutosomalGenes[activeTraitName];
+		personActivePhenotype = person.AutosomalPhenotypes[activeTrait.TraitName];
 		
 		this.Shape = (person.Sex === "female") ? "circle" : "square";
-		this.Fill = (personActiveGene.toLowerCase() === personActiveGene) ? "unshaded" : "shaded";
+		this.Fill = (personActivePhenotype === activeTrait.getActivePhenotype()) ? "shaded" : "unshaded";
 		
 		this.X = x
 		this.Y = (SYMBOL_LENGTH_px/2) + (person.Generation-1)*(2*SYMBOL_LENGTH_px);
@@ -60,9 +60,6 @@ Symbol.prototype.setPositionX = function(x) {
 Symbol.prototype.translatePositionX = function(dx) {
 	this.X += dx;
 	this.CenterX += dx;
-	
-	if (this.SVG.DescendantLine != null)
-		this.SVG.DescendantLine.translatePosition(dx, 0);
 	
 	if (this.SVG.AncestorLine != null)
 		this.SVG.AncestorLine.translatePosition(dx, 0);
