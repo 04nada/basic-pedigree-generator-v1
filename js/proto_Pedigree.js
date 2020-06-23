@@ -49,19 +49,9 @@ Pedigree.prototype.layoutFamily = function(person1) {
 		
 		this.layoutChildren(person1, person2);
 		
-		for (let i = 0; i < numberOfChildren; i++) {
-			let child = person1.Children[i];
-
-			if ((child.Partner != null) && (i < numberOfChildren-1)) {
-				child.Symbol.SVG.SiblingLine.extend(2*SYMBOL_LENGTH_px, "right");
-				
-				for (let j = i+1; j < person1.Children.length; j++) {
-					let nextChild = person1.Children[j];
-
-					nextChild.Symbol.translatePositionX(2*SYMBOL_LENGTH_px);
-				}
-			}	
-			
+		//---
+		
+		for (let child of person1.Children) {			
 			this.layoutFamily(child);
 		}
 		
@@ -176,6 +166,20 @@ Pedigree.prototype.layoutChildren = function(parent1, parent2) {
 			);
 			
 			child.Symbol.SVG.AncestorLine = ancestorLine;
+		}
+		
+		//--- if a Child has a Partner, translate all siblings to the right
+		
+		for (let i = 0; i < numberOfChildren; i++) {
+			let child = parent1.Children[i];
+
+			if ((child.Partner != null) && (i < numberOfChildren-1)) {
+				for (let j = i+1; j < numberOfChildren; j++) {
+					let nextChild = parent1.Children[j];
+
+					nextChild.Symbol.translatePositionX(2*SYMBOL_LENGTH_px);
+				}
+			}
 		}
 				
 		//--- Sibling Line (branches out to all children)
