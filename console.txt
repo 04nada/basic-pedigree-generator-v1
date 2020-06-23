@@ -12,9 +12,4 @@ Person.haveChildren(test1.Children[0], test1.Children[0].Partner);
 
 //---
 
-var ped1 = new Pedigree();
-var pedGF = ped1.Family.Grandfather;
-var pedGM = ped1.Family.Grandmother;
-
-Pedigree.layoutFamily(pedGF, pedGM);
-console.log(ped1.Family.Generations);
+generatePedigree();
