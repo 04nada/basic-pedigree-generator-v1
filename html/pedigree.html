@@ -27,8 +27,19 @@
 	</head>
 	
 	<body>
-		<div>
+		<div id="id-SVGdiv">
 			<svg id="id-pedigreeSVG"></svg>
+			
+			<button id="id-pedigreeButton" onclick="generatePedigree()"> Generate Pedigree </button>
+		</div>
+		
+		<div id="id-textDiv">
+			<div id="id-symbolLegend">
+				<h2 id="id-traitName"> Trait: </h2>
+				
+				<h3 id="id-dominantTrait"> Dominant: </h3>
+				<h3 id="id-recessiveTrait"> Recessive: </h3>
+			</div>
 		</div>
 		
 		<!-- JS Scripts (end) -->
