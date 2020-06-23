@@ -2,7 +2,7 @@ var DefinedAutosomalTraits = {};
 
 //---
 
-function AutosomalTrait(traitName, char_dominantAllele, char_recessiveAllele, dominantPhenotype, recessivePhenotype) {
+function AutosomalTrait(traitName, char_dominantAllele, char_recessiveAllele, dominantPhenotype, recessivePhenotype, expression) {
 	if (char_dominantAllele.charCodeAt(0) < 65 || char_dominantAllele.charCodeAt(0) > 90) {
 		logError("AutosomalTrait()", "Dominant allele must be a single uppercase letter.");
 	} else if (char_recessiveAllele.charCodeAt(0) < 97 || char_recessiveAllele.charCodeAt(0) > 122) {
@@ -10,15 +10,36 @@ function AutosomalTrait(traitName, char_dominantAllele, char_recessiveAllele, do
 	} else if (char_dominantAllele.toLowerCase() !== char_recessiveAllele) {
 		logError("AutosomalTrait()", "Dominant allele and recessive allele must represent the same letter.");
 	} else {
+		this.TraitName = traitName;
+		
 		this.DominantAllele = char_dominantAllele;
 		this.RecessiveAllele = char_recessiveAllele;
 		this.DominantPhenotype = dominantPhenotype;
 		this.RecessivePhenotype = recessivePhenotype;
-
-		DefinedAutosomalTraits[traitName] = this;
+		
+		this.Expression = expression;	
+	
+		this.Description = "";
+		
+		DefinedAutosomalTraits[this.TraitName] = this;
 	}
 	
 	return this;
+}
+
+AutosomalTrait.prototype.getActivePhenotype = function() {
+	switch (this.Expression) {
+		case "dominant":
+			return this.DominantPhenotype;
+		case "recessive":
+			return this.RecessivePhenotype;
+		default:
+			logError("AutosomalTrait.pt.getActivePhenotype()", "Trait expression could not be read.");
+	}
+}
+
+AutosomalTrait.prototype.setDescription = function(description) {
+	this.Description = description;
 }
 
 AutosomalTrait.prototype.PRIV_generateRandomGene = function() {
