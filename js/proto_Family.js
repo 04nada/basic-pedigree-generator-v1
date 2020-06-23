@@ -19,7 +19,8 @@ function Family() {
 		this.PRIV_continueFamily(child);
 	}
 	
-	this.Members = this.Grandfather.getSubfamily_DF();
+	this.Members1 = this.Grandfather.getSubfamily_DF(true);
+	this.Members2 = this.Grandfather.getSubfamily_DF(false);
 	
 	//--- Placing the Family in an array by Generation
 	
@@ -28,7 +29,7 @@ function Family() {
 	for (let i = 0; i < MAX_GENERATION; i++)
 		this.Generations[i] = [];
 	
-	for (let familyMember of this.Members) {
+	for (let familyMember of this.Members1) {
 		let fmGeneration = familyMember.Generation;
 		
 		// set Pedigree ID for labelling purposes (I-1)
