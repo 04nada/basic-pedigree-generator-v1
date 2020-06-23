@@ -32,10 +32,11 @@ function getRandomValueByProbability(obj_probabilityTable) {
 	var lowerBound = 0;
 	var upperBound = 0;
 	var randomNumber = Math.random();
-
+	
 	for (let i = 0; i < numberOfNumbers; i++) {
 		lowerBound = upperBound;
 		upperBound += arr_probabilities[i];
+		
 		
 		if ((randomNumber >= lowerBound) && (randomNumber < upperBound))
 			return arr_values[i];
@@ -46,7 +47,7 @@ function getRandomValueByProbability(obj_probabilityTable) {
 
 Number.prototype.toRomanNumerals = function() {
 	var romanNumeral = "";
-	arabicNumeral = this;
+	var arabicNumeral = this;
 	
 	var lookupAR = {
 		"01000": "M",
@@ -79,7 +80,28 @@ Number.prototype.toRomanNumerals = function() {
 	return romanNumeral;
 }
 
-//--- ----- Misc
+//--- ----- Arrays
+
+Array.prototype.getElementFromLast = function(i) {
+	var arrayLength = this.length;
+	
+	return this[arrayLength-1 - i];
+}
+
+Array.prototype.getRandomElement = function() {
+	var arrayLength = this.length;
+	var randomIndex = getRandomInteger(0, arrayLength-1);
+	
+	return this[randomIndex];
+}
+
+//--- ----- CSS
+
+HTMLDocument.prototype.getCSSPropertyById = function(id, property) {
+	return window.getComputedStyle(document.getElementById(id), null).getPropertyValue(property);
+}
+
+//--- ----- Console Logging
 
 function logError(source, message) {
 	console.log("<" + source + "> ERROR: " + message);
