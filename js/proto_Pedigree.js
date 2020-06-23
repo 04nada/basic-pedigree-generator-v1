@@ -1,25 +1,35 @@
 const id_pedigreeSVG = document.getElementById("id-pedigreeSVG");
-const ACTIVE_TRAIT = "eye color";
 
 //--- ----- Pedigree prototype
 
-function Pedigree(activeTraitName = ACTIVE_TRAIT) {
+function Pedigree(activeTrait) {
 	this.Family = new Family();
 	
-	for (let f of this.Family.Members) {
-		let s = new Symbol(f, activeTraitName);
+	for (let f of this.Family.Members1) {
+		let s = new Symbol(f, activeTrait);
 	}
 	
-	this.Family.Grandfather.Symbol.setPositionX(200);
+	this.Family.Grandfather.Symbol.setPositionX(3.5 * SYMBOL_LENGTH_px);
 }
 
-Pedigree.prototype.appendElement = function(element) {
-	id_pedigreeSVG.append(element);
+//--- Checking Pedigree validity
+
+const SVGWidth = parseFloat(document.getCSSPropertyById("id-pedigreeSVG", "width"));
+
+Pedigree.prototype.isContainableInSVG = function() {
+	var rightmost = this.Family.Members1[0];
+	
+	for (var member of this.Family.Members1) {
+		if (member.Symbol.X > rightmost.Symbol.X)
+			rightmost = member;
+	}
+	
+	return ((rightmost.Symbol.X+SYMBOL_LENGTH_px) <= (SVGWidth - 2*SYMBOL_LENGTH_px))
 }
 
 //--- Making connections
 
-Pedigree.layoutFamily = function(person1) {
+Pedigree.prototype.layoutFamily = function(person1) {
 	if (person1.Generation === MAX_GENERATION) {
 		return;
 	} else {
@@ -28,7 +38,7 @@ Pedigree.layoutFamily = function(person1) {
 		
 		var person2 = person1.Partner;
 		
-		Pedigree.layoutMarriage(person1, person2);
+		this.layoutMarriage(person1, person2);
 		
 		//---
 		
@@ -37,14 +47,12 @@ Pedigree.layoutFamily = function(person1) {
 		if (person1.Children == null || numberOfChildren <= 0)
 			return;
 		
-		Pedigree.layoutChildren(person1, person2);
+		this.layoutChildren(person1, person2);
 		
 		for (let i = 0; i < numberOfChildren; i++) {
 			let child = person1.Children[i];
 
 			if ((child.Partner != null) && (i < numberOfChildren-1)) {
-				console.log("EXTEND BY: " + child.PedigreeID);
-				
 				child.Symbol.SVG.SiblingLine.extend(2*SYMBOL_LENGTH_px, "right");
 				
 				for (let j = i+1; j < person1.Children.length; j++) {
@@ -54,12 +62,16 @@ Pedigree.layoutFamily = function(person1) {
 				}
 			}	
 			
-			Pedigree.layoutFamily(child);
+			this.layoutFamily(child);
 		}
+		
+		//---
+		
+		this.fixSymbolSpacing(person1);
 	}
 }
 
-Pedigree.layoutMarriage = function(partner1, partner2) {
+Pedigree.prototype.layoutMarriage = function(partner1, partner2) {
 	if ((partner1.Partner !== partner2) || (partner2.Partner !== partner1)) {
 		logError("Pedigree.layoutMarriage()", "Persons chosen to draw symbols are not married.");
 	} else {
@@ -82,11 +94,11 @@ Pedigree.layoutMarriage = function(partner1, partner2) {
 		
 		//--- Draw to HTML
 		
-		Pedigree.drawMarriage(partner1, partner2);
+		this.drawMarriage(partner1, partner2);
 	}
 }
 
-Pedigree.layoutChildren = function(parent1, parent2) {
+Pedigree.prototype.layoutChildren = function(parent1, parent2) {
 	if ((parent1.Partner !== parent2) || (parent2.Partner !== parent1)) {
 		logError("Pedigree.layoutChildren()", "Persons chosen to layout children of are not married.");
 	} else if (parent1.Children == null || parent1.Children.length === 0) {
@@ -181,13 +193,118 @@ Pedigree.layoutChildren = function(parent1, parent2) {
 		
 		//--- Draw Children to HTML
 		
-		Pedigree.drawChildren(parent1, parent2);
+		this.drawChildren(parent1, parent2);
+	}
+}
+
+Pedigree.prototype.fixSymbolSpacing = function(person1) {
+	if (person1.Children == null || person1.Children.length === 0) {
+		// no need to fix symbol spacing without any children
+		return;
+	} else {
+		var numberOfChildren = person1.Children.length;
+		var overlapRight_px = 0; 
+		
+		if (numberOfChildren > 2) {
+			// This part accounts for excess children overlapping from the middle to the left.
+			// 1*SYMBOL_LENGTH_px for every extra child from 2
+			if (this.Family.Generations[person1.Generation-1].indexOf(person1) !== 0) {
+				// fixes a rare bug when person1 is an only child with 3 children.
+				// probably breaks stuff for >= 4 children.
+				// but thankfully the webpage is set to allow at most 3 children so that'll never happen,
+				// unless this code ever gets reused in the future to generalize random pedigree generation.
+				if (!(person1.ChildOrder === 1 && person1.Father.Children.length === 1))
+					this.PRIV_adjustFrom(person1, ((numberOfChildren-2) * SYMBOL_LENGTH_px));
+				
+				// this bug might be caused by the if() being too simple to
+				// account for complex cases of overlapping to the left
+			}
+			
+			// This part accounts for excess children overlapping from the middle to the right.			
+			// 1*SYMBOL_LENGTH_px for every extra child from 2
+			overlapRight_px += ((numberOfChildren-2) * SYMBOL_LENGTH_px);
+		}
+		
+		// This part accounts for excess partners of children overlapping from the middle to the right;
+		// 2*SYMBOL_LENGTH_px for every partner that each child has
+		for (let child of person1.Children) {
+			if (child.Partner != null)
+				overlapRight_px += (2*SYMBOL_LENGTH_px);
+		}
+		
+		//---
+		
+		// In Depth-First Search, the last descendant is the Family Member that
+		// comes right before the first Family Member at the right
+		var lastDescendant = person1.getAllDescendants_DF(true).getElementFromLast(0);
+		var indexOfLastDescendant = this.Family.Members1.indexOf(lastDescendant);
+		var indexOfFirstMemberToTheRight = indexOfLastDescendant + 1;
+		
+		// Move all Family Members at the right, further to the right,
+		// but first check if such Family Members exist
+		if (indexOfFirstMemberToTheRight < this.Family.Members1.length)
+			this.PRIV_adjustFrom(this.Family.Members1[indexOfFirstMemberToTheRight], overlapRight_px);
+	}
+}
+
+Pedigree.prototype.PRIV_adjustFrom = function(person, dx) {
+	var index1 = this.Family.Members1.indexOf(person);
+	
+	var SL_translate = [];
+	var SL_extend = [];
+	
+	for (let i = index1; i < this.Family.Members1.length; i++) {
+		// translate each Member, including partners
+		member = this.Family.Members1[i];
+		
+		member.Symbol.translatePositionX(dx);
+		
+		//---
+		
+		// translate each SiblingLine only if a complete set of siblings is translates
+		// only check the first child to avoid duplicate counting
+		let mSL = member.Symbol.SVG.SiblingLine;
+		
+		if (mSL != null) {
+			if ((member.ChildOrder === 1) && !(SL_translate.includes(mSL)))
+				SL_translate.push(mSL);
+			else if (!(SL_translate.includes(mSL)) && !(SL_extend.includes(mSL)))
+				SL_extend.push(mSL);
+		}
+			
+	}
+	
+	for (let SL of SL_translate)
+		SL.translatePosition(dx, 0);
+	
+	for (let SL of SL_extend)
+		SL.extend(dx, "right");
+	
+	//---
+	
+	var index2 = this.Family.Members2.indexOf(person);
+	
+	for (let i = index2; i < this.Family.Members2.length; i++) {
+		member = this.Family.Members2[i];
+		
+		//---
+		
+		// translate each MarriageLine and DescendantLine for every pair
+		// exclude partners from the for loop to avoid duplicate counting
+		let mML = member.Symbol.SVG.MarriageLine;
+		let mDL = member.Symbol.SVG.DescendantLine;
+		
+		if (mML != null)
+			mML.translatePosition(dx, 0);
+		
+		if (mDL != null)
+			mDL.translatePosition(dx, 0);
 	}
 }
 
 //--- Drawing connections to HTML
 
-Pedigree.drawMarriage = function(partner1, partner2) {
+Pedigree.prototype.drawMarriage = function(partner1, partner2) {
 	if ((partner1.Partner !== partner2) || (partner2.Partner !== partner1)) {
 		logError("Symbol.layoutMarriage()", "Persons chosen to draw symbols are not married.");
 	} else {	
@@ -196,13 +313,16 @@ Pedigree.drawMarriage = function(partner1, partner2) {
 		
 		//---
 		
+		// Marriage Line
 		id_pedigreeSVG.append(symbol1.SVG.MarriageLine.SVG.Element);
+		
+		// Partner Symbols
 		id_pedigreeSVG.append(symbol1.SVG.Element);
 		id_pedigreeSVG.append(symbol2.SVG.Element);
 	}
 }
 
-Pedigree.drawChildren = function(parent1, parent2) {
+Pedigree.prototype.drawChildren = function(parent1, parent2) {
 	if ((parent1.Partner !== parent2) || (parent2.Partner !== parent1)) {
 		logError("Symbol.layoutChildren()", "Persons chosen to draw symbols are not married.");
 	} else {
@@ -211,15 +331,18 @@ Pedigree.drawChildren = function(parent1, parent2) {
 		
 		//---
 		
+		// Descendant Line
 		id_pedigreeSVG.append(symbol1.SVG.DescendantLine.SVG.Element);
 		
-		for (let child of parent1.Children) {
+		// Ancestor Lines
+		for (let child of parent1.Children)
 			id_pedigreeSVG.append(child.Symbol.SVG.AncestorLine.SVG.Element);
-			id_pedigreeSVG.append(child.Symbol.SVG.SiblingLine.SVG.Element);
-		}
 		
-		for (let child of parent1.Children) {
+		// Sibling Line
+		id_pedigreeSVG.append(parent1.Children[0].Symbol.SVG.SiblingLine.SVG.Element);
+		
+		// Child Symbols
+		for (let child of parent1.Children)
 			id_pedigreeSVG.append(child.Symbol.SVG.Element);
-		}
 	}
 }
