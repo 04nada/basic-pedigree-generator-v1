@@ -4,7 +4,7 @@
 const GENERATIONAL_SOLO_MARRIAGE = [
 	1.00,
 	0.90,
-	0.30,
+	0.60,
 	0.00
 ]
 
@@ -12,12 +12,15 @@ const GENERATIONAL_SOLO_MARRIAGE = [
 const GENERATIONAL_FERTILITY = [
 	[0.00, 0.20, 0.40, 0.40],
 	[0.00, 0.30, 0.40, 0.30],
-	[0.30, 0.35, 0.35, 0.00],
-	[1.00, 0.00, 0.00, 0.00]
+	[0.00, 0.35, 0.45, 0.20],
+	[0.00, 0.00, 0.00, 0.00]
 ];
 
 // Generations go from 1 to 4
 const MAX_GENERATION = 4;
+
+// A couple can have at most 3 children
+const MAX_CHILDREN = 3;
 
 //--- ----- Person prototype
 
@@ -52,6 +55,7 @@ function Person(generation = 1, sex = Person.generateRandomSex()) {
 	this.Mother = (this.Generation === 1) ? null : undefined; // {}
 	this.Father = (this.Generation === 1) ? null : undefined; // {}
 	this.Partner = undefined; // {}
+	this.ChildOrder = undefined;
 	this.Children = undefined; // [{}]
 }
 
@@ -95,8 +99,8 @@ Person.prototype.PRIV_assignPhenotypes = function() {
 
 //--- Person getter functions
 
-// gets a subFamily consisting of a Person and all their descendants, including in-laws
-Person.prototype.getSubfamily_DF = function() {
+// gets a subFamily consisting of a Person and all their descendants
+Person.prototype.getSubfamily_DF = function(withPartners) {
 	var subfamily = [];
 	
 	subfamily.push(this);
@@ -105,7 +109,7 @@ Person.prototype.getSubfamily_DF = function() {
 		subfamily.push(this.Partner);
 	}
 	
-	subfamily.push(this.getAllDescendants_DF(true));
+	subfamily.push(this.getAllDescendants_DF(withPartners));
 	subfamily = subfamily.flat(Infinity);
 	
 	return subfamily;
@@ -223,7 +227,7 @@ Person.haveChildren = function(partner1, partner2) {
 		var obj_randomNumberOfChildren = {};
 	
 		// this generates an object that pairs a number to its probability (e.g. {0: 0.35, 1: 0.30, 2: 0.20, 3: 0.15
-		for (let i = 0; i <= 3; i++) {
+		for (let i = 0; i <= MAX_CHILDREN; i++) {
 			obj_randomNumberOfChildren[i.toString()] = GENERATIONAL_FERTILITY[partner1.Generation-1][i];
 		}
 	
@@ -288,6 +292,7 @@ Person.PRIV_makeChild = function(person1, person2) {
 	}
 	
 	child.PRIV_assignPhenotypes();
+	child.ChildOrder = person1.Children.length + 1;
 	
 	// Assigning Mother and Father to child
 	if (person1.Sex == "female") {
