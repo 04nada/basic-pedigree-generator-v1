@@ -45,6 +45,7 @@ function generatePedigree() {
 		pedGM = ped1.Family.Grandmother;
 
 		ped1.layoutFamily(pedGF);
+		ped1.findDominant(pedGF);
 
 		if (ped1.isContainableInSVG())
 			break;
