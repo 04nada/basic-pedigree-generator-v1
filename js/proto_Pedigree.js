@@ -38,7 +38,7 @@ Pedigree.prototype.isSolvable = function(){
 		var pheno1 = person1.AutosomalPhenotypes[this.ActiveTrait.TraitName];
 		
 		if (pheno1 === this.ActiveTrait.RecessivePhenotype) {
-			this.Family.MembersByGenotype.Recessive.push(person1);
+			this.Family.MembersBySolvableGenotype.Recessive.push(person1);
 		} else {
 			if (person1.Partner != null) {
 				var pheno2 = person1.Partner.AutosomalPhenotypes[this.ActiveTrait.TraitName];
@@ -48,7 +48,7 @@ Pedigree.prototype.isSolvable = function(){
 					
 					if (phenoC === this.ActiveTrait.RecessivePhenotype) {
 						// T_ x __ = tt implies that the parent is Tt
-						this.Family.MembersByGenotype.Heterozygous.push(person1);
+						this.Family.MembersBySolvableGenotype.Heterozygous.push(person1);
 						
 						// the trait is solvable iff some two parents with the same phenotype have a child with a different
 						//     phenotype, which implies the 2 parents being heterozygous and the child being recessive
@@ -63,8 +63,8 @@ Pedigree.prototype.isSolvable = function(){
 				}
 			}
 			
-			// this line runs if none of the children are recessive, since the identity being TT or Tt cannot be determined
-			this.Family.MembersByGenotype.UnknownDominant.push(person1);
+			// these lines run if none of the children are recessive, since the identity being TT or Tt cannot be determined
+			this.Family.MembersBySolvableGenotype.Unknown.push(person1);
 		}
 	}
 	

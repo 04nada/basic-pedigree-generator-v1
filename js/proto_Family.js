@@ -39,10 +39,10 @@ function Family() {
 		this.Generations[fmGeneration - 1].push(familyMember);
 	}
 	
-	//--- Placing the Family in arrays by Genotype
+	//--- Placing the Family in arrays by solvable Genotype
 	
-	this.MembersByGenotype = {
-		UnknownDominant: [],
+	this.MembersBySolvableGenotype = {
+		Unknown: [],
 		Heterozygous: [],
 		Recessive: []
 	};
