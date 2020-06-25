@@ -3,6 +3,8 @@ const id_pedigreeSVG = document.getElementById("id-pedigreeSVG");
 //--- ----- Pedigree prototype
 
 function Pedigree(activeTrait) {
+	this.ActiveTrait = activeTrait;
+	
 	this.Family = new Family();
 	
 	for (let f of this.Family.Members1) {
@@ -10,7 +12,6 @@ function Pedigree(activeTrait) {
 	}
 	
 	this.Family.Grandfather.Symbol.setPositionX(3.5 * SYMBOL_LENGTH_px);
-	this.HeterozygousIndividuals = [];
 }
 
 //--- Checking Pedigree validity
@@ -26,6 +27,48 @@ Pedigree.prototype.isContainableInSVG = function() {
 	}
 	
 	return ((rightmost.Symbol.X+SYMBOL_LENGTH_px) <= (SVGWidth - 2*SYMBOL_LENGTH_px))
+}
+
+// checks if the pedigree trait is solvable, while simultaneously assigning genotype solvability
+Pedigree.prototype.isSolvable = function(){
+	var solvable = false;
+	
+	allMembers:
+	for (let person1 of this.Family.Members1) {
+		var pheno1 = person1.AutosomalPhenotypes[this.ActiveTrait.TraitName];
+		
+		if (pheno1 === this.ActiveTrait.RecessivePhenotype) {
+			this.Family.MembersByGenotype.Recessive.push(person1);
+		} else {
+			if (person1.Partner != null) {
+				var pheno2 = person1.Partner.AutosomalPhenotypes[this.ActiveTrait.TraitName];
+			
+				for (let child of person1.Children) {
+					let phenoC = child.AutosomalPhenotypes[this.ActiveTrait.TraitName];
+					
+					if (phenoC === this.ActiveTrait.RecessivePhenotype) {
+						// T_ x __ = tt implies that the parent is Tt
+						this.Family.MembersByGenotype.Heterozygous.push(person1);
+						
+						// the trait is solvable iff some two parents with the same phenotype have a child with a different
+						//     phenotype, which implies the 2 parents being heterozygous and the child being recessive
+						if (pheno1 === pheno2) {
+							solvable = true;
+							console.log(this.ActiveTrait.TraitName + " can be determined to be " + this.ActiveTrait.Expression + ".");
+							console.log("Homozygous recessive: " + child.PedigreeID);
+						}
+						
+						continue allMembers;
+					}
+				}
+			}
+			
+			// this line runs if none of the children are recessive, since the identity being TT or Tt cannot be determined
+			this.Family.MembersByGenotype.UnknownDominant.push(person1);
+		}
+	}
+	
+	return solvable;
 }
 
 //--- Making connections
@@ -250,93 +293,6 @@ Pedigree.prototype.fixSymbolSpacing = function(person1) {
 		if (indexOfFirstMemberToTheRight < this.Family.Members1.length)
 			this.PRIV_adjustFrom(this.Family.Members1[indexOfFirstMemberToTheRight], overlapRight_px);
 	}
-}
-
-// To see if you can determine the Dominant gene using the pedigree
-
-/* 
-	
-// Recursive findDominant fcn
-	
-Pedigree.prototype.findDominant = function(person1){
-	if ((person1.Generation === MAX_GENERATION) || (person1.Partner == null)) {
-		return;
-	}
-	else{
-			for(let i = 0; i < person1.Children.length; i++){
-				let child = person1.Children[i];
-				if ((child.AutosomalPhenotypes[activeTraitName] != person1.AutosomalPhenotypes[activeTraitName]) && (person1.AutosomalPhenotypes[activeTraitName] == person1.Partner.AutosomalPhenotypes[activeTraitName])){
-					console.log(person1.AutosomalPhenotypes[activeTraitName] + " is dominant.");
-					console.log(child.PedigreeID);
-					return;
-				}
-				for (let child of person1.Children) {			
-					this.findDominant(child);
-				}
-			}
-		}
-}
-
-*/
-
-Pedigree.prototype.findDominant = function(){
-	var generations = this.Family.Generations;
-	for (let i = 0; i < generations.length-1; i++){
-		for (let j = 0; j < generations[i].length; j++){
-			let person1 = generations[i][j];
-			if (person1.Partner != null){
-				for (let k = 0; k < person1.Children.length; k++){
-					let child = person1.Children[k];
-					if ((child.AutosomalPhenotypes[activeTraitName] != child.Father.AutosomalPhenotypes[activeTraitName]) && (child.Father.AutosomalPhenotypes[activeTraitName] == child.Mother.AutosomalPhenotypes[activeTraitName])){
-					console.log(person1.AutosomalPhenotypes[activeTraitName] + " is dominant. Homozygous recessive: " + child.PedigreeID);
-					return true;
-				}
-				}
-			}
-		}
-	}
-	return false;
-}
-
-// Finding Heterozygous individuals
-
-Pedigree.prototype.findHeterozygous = function(){
-	var generations = this.Family.Generations;
-	var HI = this.HeterozygousIndividuals;
-	var HeterozygousPresent = false;
-	var HeterozygousParent;
-	var HIcheck = false;
-	for (let i = 0; i < generations.length-1; i++){
-		for (let j = 0; j < generations[i].length; j++){
-			let person1 = generations[i][j];
-			if (person1.Partner != null){
-				for (let k = 0; k < person1.Children.length; k++){
-					let child = person1.Children[k];
-					if ((child.AutosomalPhenotypes[activeTraitName] == activeTrait.RecessivePhenotype) && (child.Father.AutosomalPhenotypes[activeTraitName] != child.Mother.AutosomalPhenotypes[activeTraitName])){
-						if (child.Father.AutosomalPhenotypes[activeTraitName] == activeTrait.DominantPhenotype){
-							console.log("Heterozygous: " + child.Father.PedigreeID);
-							HeterozygousParent = child.Father;
-						}
-						else{
-							console.log("Heterozygous: " + child.Mother.PedigreeID);
-							HeterozygousParent = child.Mother;
-						}
-							HeterozygousPresent = true;
-						for (let l = 0; l < HI.length; l++){
-							if(HI[l] == HeterozygousParent){
-								HIcheck = true;
-							}
-						}
-						if(!HIcheck){
-							this.HeterozygousIndividuals.push(HeterozygousParent);
-						}
-							HIcheck = false;
-					}
-				}
-			}
-		}
-	}
-	return HeterozygousPresent;
 }
 
 Pedigree.prototype.PRIV_adjustFrom = function(person, dx) {
