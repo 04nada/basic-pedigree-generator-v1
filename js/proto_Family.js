@@ -22,7 +22,7 @@ function Family() {
 	this.Members1 = this.Grandfather.getSubfamily_DF(true);
 	this.Members2 = this.Grandfather.getSubfamily_DF(false);
 	
-	//--- Placing the Family in an array by Generation
+	//--- Placing the Family in arrays by Generation
 	
 	this.Generations = [];
 
@@ -38,6 +38,14 @@ function Family() {
 		
 		this.Generations[fmGeneration - 1].push(familyMember);
 	}
+	
+	//--- Placing the Family in arrays by Genotype
+	
+	this.MembersByGenotype = {
+		UnknownDominant: [],
+		Heterozygous: [],
+		Recessive: []
+	};
 }
 
 //recursive magic
