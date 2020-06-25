@@ -33,10 +33,11 @@ var ped1, pedGF, pedGM;
 function generatePedigree() {
 	activeTraitName = Object.keys(DefinedAutosomalTraits).getRandomElement();
 	activeTrait = DefinedAutosomalTraits[activeTraitName];
-	var solvable = false;
-	var solvable2 = false;
+
 	//---
-		
+	
+	console.clear();
+	
 	// keep generating new pedigrees until a sizable and solvable one is obtained
 	while (true) {
 		clearSVG();
@@ -46,14 +47,16 @@ function generatePedigree() {
 		pedGM = ped1.Family.Grandmother;
 
 		ped1.layoutFamily(pedGF);
-		solvable = ped1.findDominant();
-		solvable2 = ped1.findHeterozygous();
 
-		if (ped1.isContainableInSVG() && (solvable) && (solvable2) && (ped1.Family.Generations[2].length != 0))
+		if ((ped1.isContainableInSVG()) && (ped1.isSolvable()) && (ped1.Family.Generations[2].length > 0))
 			break;
 	}
 	
+	console.log("by Generation: ");
 	console.log(ped1.Family.Generations);
+	
+	console.log("by Genotype: ");
+	console.log(ped1.Family.MembersByGenotype);
 	
 	//---
 	
