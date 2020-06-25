@@ -10,7 +10,7 @@ function Pedigree(activeTrait) {
 	}
 	
 	this.Family.Grandfather.Symbol.setPositionX(3.5 * SYMBOL_LENGTH_px);
-	this.RecessiveIndividuals = [];
+	this.HeterozygousIndividuals = [];
 }
 
 //--- Checking Pedigree validity
@@ -302,10 +302,10 @@ Pedigree.prototype.findDominant = function(){
 
 Pedigree.prototype.findHeterozygous = function(){
 	var generations = this.Family.Generations;
-	var RI = this.RecessiveIndividuals;
+	var HI = this.HeterozygousIndividuals;
 	var HeterozygousPresent = false;
-	var RecessiveParent;
-	var RIcheck = false;
+	var HeterozygousParent;
+	var HIcheck = false;
 	for (let i = 0; i < generations.length-1; i++){
 		for (let j = 0; j < generations[i].length; j++){
 			let person1 = generations[i][j];
@@ -315,22 +315,22 @@ Pedigree.prototype.findHeterozygous = function(){
 					if ((child.AutosomalPhenotypes[activeTraitName] == activeTrait.RecessivePhenotype) && (child.Father.AutosomalPhenotypes[activeTraitName] != child.Mother.AutosomalPhenotypes[activeTraitName])){
 						if (child.Father.AutosomalPhenotypes[activeTraitName] == activeTrait.DominantPhenotype){
 							console.log("Heterozygous: " + child.Father.PedigreeID);
-							RecessiveParent = child.Father;
+							HeterozygousParent = child.Father;
 						}
 						else{
 							console.log("Heterozygous: " + child.Mother.PedigreeID);
-							RecessiveParent = child.Mother;
+							HeterozygousParent = child.Mother;
 						}
 							HeterozygousPresent = true;
-						for (let l = 0; l < RI.length; l++){
-							if(RI[l] == RecessiveParent){
-								RIcheck = true;
+						for (let l = 0; l < HI.length; l++){
+							if(HI[l] == HeterozygousParent){
+								HIcheck = true;
 							}
 						}
-						if(!RIcheck){
-							this.RecessiveIndividuals.push(RecessiveParent);
+						if(!HIcheck){
+							this.HeterozygousIndividuals.push(HeterozygousParent);
 						}
-							RIcheck = false;
+							HIcheck = false;
 					}
 				}
 			}
