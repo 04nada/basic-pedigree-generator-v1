@@ -56,7 +56,7 @@ function generatePedigree() {
 	console.log(ped1.Family.Generations);
 	
 	console.log("by Genotype: ");
-	console.log(ped1.Family.MembersByGenotype);
+	console.log(ped1.Family.MembersBySolvableGenotype);
 	
 	//---
 	
