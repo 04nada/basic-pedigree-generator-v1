@@ -253,6 +253,10 @@ Pedigree.prototype.fixSymbolSpacing = function(person1) {
 
 // To see if you can determine the Dominant gene using the pedigree
 
+/* 
+	
+// Recursive findDominant fcn
+	
 Pedigree.prototype.findDominant = function(person1){
 	if ((person1.Generation === MAX_GENERATION) || (person1.Partner == null)) {
 		return;
@@ -270,6 +274,28 @@ Pedigree.prototype.findDominant = function(person1){
 				}
 			}
 		}
+}
+
+*/
+
+Pedigree.prototype.findDominant = function(){
+	var generations = this.Family.Generations;
+	for (let i = 0; i < generations.length-1; i++){
+		for (let j = 0; j < generations[i].length; j++){
+			let person1 = generations[i][j];
+			if (person1.Partner != null){
+				for (let k = 0; k < person1.Children.length; k++){
+					let child = person1.Children[k];
+					if ((child.AutosomalPhenotypes[activeTraitName] != child.Father.AutosomalPhenotypes[activeTraitName]) && (child.Father.AutosomalPhenotypes[activeTraitName] == child.Mother.AutosomalPhenotypes[activeTraitName])){
+					console.log(person1.AutosomalPhenotypes[activeTraitName] + " is dominant.");
+					console.log(child.PedigreeID);
+					return true;
+				}
+				}
+			}
+		}
+	}
+	return false;
 }
 
 Pedigree.prototype.PRIV_adjustFrom = function(person, dx) {

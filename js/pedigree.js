@@ -33,7 +33,7 @@ var ped1, pedGF, pedGM;
 function generatePedigree() {
 	activeTraitName = Object.keys(DefinedAutosomalTraits).getRandomElement();
 	activeTrait = DefinedAutosomalTraits[activeTraitName];
-	
+	var solvable = false;
 	//---
 		
 	// keep generating new pedigrees until a sizable and solvable one is obtained
@@ -45,9 +45,9 @@ function generatePedigree() {
 		pedGM = ped1.Family.Grandmother;
 
 		ped1.layoutFamily(pedGF);
-		ped1.findDominant(pedGF);
+		solvable = ped1.findDominant();
 
-		if (ped1.isContainableInSVG())
+		if (ped1.isContainableInSVG() && (solvable) && (ped1.Family.Generations[2].length != 0))
 			break;
 	}
 	
