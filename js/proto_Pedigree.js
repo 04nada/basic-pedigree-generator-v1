@@ -10,6 +10,7 @@ function Pedigree(activeTrait) {
 	}
 	
 	this.Family.Grandfather.Symbol.setPositionX(3.5 * SYMBOL_LENGTH_px);
+	this.RecessiveIndividuals = [];
 }
 
 //--- Checking Pedigree validity
@@ -287,8 +288,7 @@ Pedigree.prototype.findDominant = function(){
 				for (let k = 0; k < person1.Children.length; k++){
 					let child = person1.Children[k];
 					if ((child.AutosomalPhenotypes[activeTraitName] != child.Father.AutosomalPhenotypes[activeTraitName]) && (child.Father.AutosomalPhenotypes[activeTraitName] == child.Mother.AutosomalPhenotypes[activeTraitName])){
-					console.log(person1.AutosomalPhenotypes[activeTraitName] + " is dominant.");
-					console.log(child.PedigreeID);
+					console.log(person1.AutosomalPhenotypes[activeTraitName] + " is dominant. Homozygous recessive: " + child.PedigreeID);
 					return true;
 				}
 				}
@@ -296,6 +296,47 @@ Pedigree.prototype.findDominant = function(){
 		}
 	}
 	return false;
+}
+
+// Finding Heterozygous individuals
+
+Pedigree.prototype.findHeterozygous = function(){
+	var generations = this.Family.Generations;
+	var RI = this.RecessiveIndividuals;
+	var HeterozygousPresent = false;
+	var RecessiveParent;
+	var RIcheck = false;
+	for (let i = 0; i < generations.length-1; i++){
+		for (let j = 0; j < generations[i].length; j++){
+			let person1 = generations[i][j];
+			if (person1.Partner != null){
+				for (let k = 0; k < person1.Children.length; k++){
+					let child = person1.Children[k];
+					if ((child.AutosomalPhenotypes[activeTraitName] == activeTrait.RecessivePhenotype) && (child.Father.AutosomalPhenotypes[activeTraitName] != child.Mother.AutosomalPhenotypes[activeTraitName])){
+						if (child.Father.AutosomalPhenotypes[activeTraitName] == activeTrait.DominantPhenotype){
+							console.log("Heterozygous: " + child.Father.PedigreeID);
+							RecessiveParent = child.Father;
+						}
+						else{
+							console.log("Heterozygous: " + child.Mother.PedigreeID);
+							RecessiveParent = child.Mother;
+						}
+							HeterozygousPresent = true;
+						for (let l = 0; l < RI.length; l++){
+							if(RI[l] == RecessiveParent){
+								RIcheck = true;
+							}
+						}
+						if(!RIcheck){
+							this.RecessiveIndividuals.push(RecessiveParent);
+						}
+							RIcheck = false;
+					}
+				}
+			}
+		}
+	}
+	return HeterozygousPresent;
 }
 
 Pedigree.prototype.PRIV_adjustFrom = function(person, dx) {
