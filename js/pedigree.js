@@ -1,5 +1,6 @@
 $(document).ready(function() {
-	
+	clearSVG();
+	resetTextDivs();
 });
 
 //--- -----
@@ -41,6 +42,7 @@ function generatePedigree() {
 	// keep generating new pedigrees until a sizable and solvable one is obtained
 	while (true) {
 		clearSVG();
+		resetTextDivs();
 		
 		ped1 = new Pedigree(activeTrait);
 		pedGF = ped1.Family.Grandfather;
@@ -51,6 +53,8 @@ function generatePedigree() {
 		if ((ped1.isContainableInSVG()) && (ped1.isSolvable()) && (ped1.Family.Generations[2].length > 0))
 			break;
 	}
+	
+	id_textDiv.style.visibility = "visible";
 	
 	console.log("by Generation: ");
 	console.log(ped1.Family.Generations);
@@ -70,4 +74,33 @@ function clearSVG() {
 	while (id_pedigreeSVG.firstChild) {
 		id_pedigreeSVG.removeChild(id_pedigreeSVG.firstChild);
 	}
+}
+
+//--- -----
+
+const id_textDiv = document.getElementById("id-textDiv");
+
+const id_traitExpressionForm = document.getElementById("id-traitExpressionForm");
+const id_traitExpressionOutput = document.getElementById("id-traitExpressionOutput");
+
+//---
+
+function resetTextDivs() {
+	id_traitExpressionOutput.innerHTML = "";
+	
+	id_textDiv.style.visibility = "hidden";
+}
+
+//---
+
+function submitTraitExpression() {
+	var submit_expression = id_traitExpressionForm.elements["name-traitExpression"];
+	
+	if (submit_expression.value === ped1.ActiveTrait.Expression) {
+		id_traitExpressionOutput.innerHTML = "Correct: " + ped1.ActiveTrait.TraitName + " is " + ped1.ActiveTrait.Expression + ".";
+	} else {
+		id_traitExpressionOutput.innerHTML = "Wrong: " + ped1.ActiveTrait.TraitName + " is " + ped1.ActiveTrait.Expression + ".";
+	}
+	
+	return false;
 }

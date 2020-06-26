@@ -34,6 +34,22 @@
 		</div>
 		
 		<div id="id-textDiv">
+			<div id="id-traitExpression">
+				<form id="id-traitExpressionForm" onsubmit="return submitTraitExpression()">
+					<h3> What is the Mode of Inheritance of the trait? </h3>
+				
+					<select name="name-traitExpression" required>
+						<option value="" hidden disabled selected> </option>
+						<option value="dominant"> Autosomal Dominant </option>
+						<option value="recessive"> Autosomal Recessive </option>
+					</select>
+					
+					<button type="submit"> Submit </button>
+				</form>
+				
+				<div id="id-traitExpressionOutput"> </div>
+			</div>
+		
 			<div id="id-symbolLegend">
 				<h2 id="id-traitName"> Trait: </h2>
 				
