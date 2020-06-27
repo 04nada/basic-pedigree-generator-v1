@@ -1,6 +1,6 @@
 //--- ----- Symbol prototype
 
-const SYMBOL_LENGTH_px = 28;
+var SYMBOL_LENGTH_px = parseFloat(document.getCSSPropertyById("id-pedigreeSVG", "width")) / 28.0;
 
 function Symbol(person, activeTrait, x = 0) {
 	if (!(activeTrait.TraitName in DefinedAutosomalTraits)) {
