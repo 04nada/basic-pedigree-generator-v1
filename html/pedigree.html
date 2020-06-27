@@ -10,7 +10,7 @@
 		<meta name="author" content="" />
 		<meta name="section" content="" />
 		
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		
 		<h1> </h1>
 		
@@ -22,39 +22,44 @@
 		<!-- JS Scripts (start) -->
 		
 		<script src="../js/jquery-1.11.2.min.js"></script>
-		<!-- <script src="../js/jquery.mobile-1.4.5.min.js"></script> -->
 		<script src="../js/html2canvas.min.js"></script>
 	</head>
 	
 	<body>
-		<div id="id-SVGdiv">
+		<div id="id-pedigreeDiv">
 			<svg id="id-pedigreeSVG"></svg>
 			
 			<button id="id-pedigreeButton" onclick="generatePedigree()"> Generate Pedigree </button>
 		</div>
 		
-		<div id="id-textDiv">
-			<div id="id-traitExpression">
-				<form id="id-traitExpressionForm" onsubmit="return submitTraitExpression()">
-					<h3> What is the Mode of Inheritance of the trait? </h3>
+		<div id="id-traitExpressionDiv">
+			<form id="id-traitExpressionForm" onsubmit="return submitTraitExpression()">
+				<h2> What is the Mode of Inheritance of the trait? </h2>
+			
+				<select name="name-traitExpression" required>
+					<option value="" hidden disabled selected> </option>
+					<option value="dominant"> Dominant </option>
+					<option value="recessive"> Recessive </option>
+				</select>
 				
-					<select name="name-traitExpression" required>
-						<option value="" hidden disabled selected> </option>
-						<option value="dominant"> Autosomal Dominant </option>
-						<option value="recessive"> Autosomal Recessive </option>
-					</select>
-					
-					<button type="submit"> Submit </button>
-				</form>
-				
-				<div id="id-traitExpressionOutput"> </div>
-			</div>
+				<button type="submit" id="id-submitTraitExpression"> Submit </button>
+			</form>
+			
+			<div id="id-traitExpressionOutput"> </div>
+		</div>
 		
-			<div id="id-symbolLegend">
+		<div id="id-traitAnalysisDiv">
+			<div id="id-traitInfo">
 				<h2 id="id-traitName"> Trait: </h2>
 				
 				<h3 id="id-dominantTrait"> Dominant: </h3>
 				<h3 id="id-recessiveTrait"> Recessive: </h3>
+			</div>
+			
+			<div id="id-traitQuestion">
+				<h2 id="id-question"> </h2>
+				
+				<select id="id-choices"> </select>
 			</div>
 		</div>
 		
