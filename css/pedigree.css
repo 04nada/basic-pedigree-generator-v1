@@ -1,7 +1,10 @@
-#id-SVGdiv {
+/* ----- Pedigree Div/SVG ----- */
+
+/* default; S < phone */
+#id-pedigreeDiv {
 	background-color: beige;
 	
-	width: 1000px;
+	width: 90vw;
 	height: auto;
 	
 	margin: 20px auto;
@@ -11,11 +14,11 @@
 }
 
 	#id-pedigreeSVG {
+		display: block;
 		background-color: white;
 		
-		display: block;
-		width: calc(28 * var(--symbol-length-px));
-		height: calc(2 * var(--NUMBER-OF-GENERATIONS) * var(--symbol-length-px));
+		width: 100%;
+		/* height: calc(2 * numberOfGenerations * symbolLength); */
 		
 		border: 1px solid black;
 		margin: 20px auto;
@@ -27,72 +30,155 @@
 		
 		border: 1px solid black;
 		margin: 20px auto;
+		
+		cursor: pointer;
 	}
-	
-#id-textDiv {
-	background-color: #EEE;
-	
-	width: 1000px;
-	height: auto;
-	
-	margin: 20px auto;
-	padding: 0px;
-	
-	box-sizing: border-box;
-}
-	
-	#id-traitExpression {
-		background-color: #999;
-		
-		width: 80%;
-		margin: 20px auto;
-		
-		text-align: center;
+
+@media screen and (min-width: 600px) {
+	#id-pedigreeDiv {
+		width: 70vw;
 	}
-		
-		#id-traitExpressionForm {
-			background-color: #AFA;
-			
+
+		#id-pedigreeSVG {
 			width: 80%;
-			height: auto;
-			margin: 20px auto;
-			padding: 20px;
-			box-sizing: border-box;
+			/* height: calc(2 * numberOfGenerations * symbolLength); */
+		}
+}
+
+/* ----- Trait Expression Div ----- */
+
+/* default; S < phone */
+#id-traitExpressionDiv {
+	/*background-color: #999;*/
+	
+	width: 80vw;
+	margin: 20px auto;
+	
+	text-align: center;
+}
 		
+	#id-traitExpressionForm {
+		background-color: #AEF;
+		
+		width: calc(100% - 40px);
+		height: auto;
+		
+		margin: 20px auto;
+		padding: 20px;
+	}
+		
+		#id-traitExpressionForm > select, #id-traitExpressionForm > button {
+			height: 20px;
+			
+			font-size: 14px;
 		}
 		
-			#id-traitExpressionForm * {
+	#id-traitExpressionOutput {
+		/* background-color: #FAA/#AFA; */
+		
+		width: calc(100% - 20px);
+		height: auto;
+		
+		margin: 20px auto;
+		padding: 10px;
+		
+		font-size: 14px;
+	}
+
+@media screen and (min-width: 600px) {
+	#id-traitExpressionDiv {
+		width: 60vw;
+	}
+			
+		#id-traitExpressionForm {
+			
+		}
+			
+			#id-traitExpressionForm select, #id-traitExpressionForm button {
+				height: 24px;
+				
 				font-size: 16px;
 			}
 			
 		#id-traitExpressionOutput {
-			background-color: #FAA;
-			
-			width: 80%;
-			height: 60px;
-			margin: 20px auto;
-			padding: 20px;
-			box-sizing: border-box;
-			
-			font-size: 20px;
+			font-size: 24px;
 		}
+}
+
+/* ----- ----- */
+
+/* default; S < phone */
+#id-traitAnalysisDiv {
+	background-color: #EEE;
 	
-	#id-symbolLegend {
-		background-color: #AEF;
+	width: 90vw;
+	height: auto;
+	
+	margin: 20px auto;
+	padding: 0px;
+}
+	
+	#id-traitInfo {
+		background-color: #FDB;
 		
-		width: 40%;
+		width: calc(100% - 20px);
 		height: auto;
 		
 		margin: 0px;
 		padding: 10px;
 	}
 
-		#id-symbolLegend > h2, #id-symbolLegend > h3 {
-			line-height:
+		#id-traitInfo > h2, #id-traitInfo > h3 {
 			margin: 0px;
 		}
 	
 		#id-traitName {
 			text-align: center;
 		}
+		
+	#id-traitQuestion {
+		background-color: #FFB;
+		
+		border-width: 0px;
+		margin: 0px;
+		padding: 10px;
+	}
+	
+		#id-question {
+			
+		}
+		
+		#id-choices {
+			
+		}
+	
+@media screen and (min-width: 600px) {
+	#id-traitAnalysisDiv {	
+		width: 70vw;
+	}
+		
+		#id-traitInfo {
+			width: calc(40% - 20px);
+		}
+
+			#id-traitInfo > h2, #id-traitInfo > h3 {
+				margin: 0px;
+			}
+		
+			#id-traitName {
+				text-align: center;
+			}
+			
+		#id-traitQuestion {
+			width: calc(60% - 20px);
+		}
+		
+			#id-question {
+				
+			}
+			
+			#id-choices {
+				
+			}
+}
 	

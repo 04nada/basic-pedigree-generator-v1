@@ -1,24 +1,42 @@
 :root {
-	--NUMBER-OF-GENERATIONS: 4;
-	--symbol-length-px: 28px;
+	--mobile-size2: 18px;
+	--mobile-size3: 14px;
+	
+	--desktop-size2: 24px;
+	--desktop-size3: 16px;
+}
+
+@font-face {
+	font-family: Montserrat Regular;
+	src: url("../resources/fonts/Montserrat/Montserrat-Regular.otf");
 }
 
 body {
 	margin: 0px;
 	
-	font-family: "Arial";
+	font-family: "Montserrat Regular";
 }
 
 h2 {
 	line-height: 1.2;
 	margin: 0px;
 	
-	font-size: 24px;
+	font-size: 18px;
 }
 
 h3 {
 	line-height: 1.2;
 	margin: 0px;
 	
-	font-size: 18px;
+	font-size: 14px;
+}
+
+@media screen and (min-width: 600px) {
+	h2 {
+		font-size: 24px;
+	}
+
+	h3 {
+		font-size: 16px;
+	}
 }
