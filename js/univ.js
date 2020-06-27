@@ -101,6 +101,10 @@ HTMLDocument.prototype.getCSSPropertyById = function(id, property) {
 	return window.getComputedStyle(document.getElementById(id), null).getPropertyValue(property);
 }
 
+Element.prototype.getAllFormElements = function() {
+	return this.querySelectorAll("input, select, option, textarea, button");
+}
+
 //--- ----- Console Logging
 
 function logError(source, message) {
