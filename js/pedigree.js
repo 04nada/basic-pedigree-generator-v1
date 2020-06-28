@@ -1,9 +1,11 @@
+
+
 $(document).ready(function() {
 	clearSVG();
 	resetContent();
 	
-	id_pedigreeSVG.style.height = 2 * MAX_GENERATION * SYMBOL_LENGTH_px;
-
+	id_pedigreeSVG.style.height = (2 * MAX_GENERATION * SYMBOL_LENGTH_px) + "px";
+	
 	alert(SYMBOL_LENGTH_px);
 });
 
@@ -12,7 +14,7 @@ window.addEventListener("orientationchange", function(){
 	setTimeout(function() {
 		SYMBOL_LENGTH_px = parseFloat(document.getCSSPropertyById("id-pedigreeSVG", "width")) / 28.0;
 		
-		id_pedigreeSVG.style.height = 2 * MAX_GENERATION * SYMBOL_LENGTH_px;
+		id_pedigreeSVG.style.height = (2 * MAX_GENERATION * SYMBOL_LENGTH_px) + "px";
 	}, 1000);
 });
 
