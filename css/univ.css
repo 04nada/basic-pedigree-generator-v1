@@ -11,10 +11,16 @@
 	src: url("../resources/fonts/Montserrat/Montserrat-Regular.otf");
 }
 
+@font-face {
+	font-family: Lustria Regular;
+	src: url("../resources/fonts/Lustria-Regular.ttf");
+}
+
 body {
 	margin: 0px;
+	padding-bottom: 100px;
 	
-	font-family: "Montserrat Regular";
+	font-family: "Lustria Regular";
 }
 
 h2 {
@@ -40,6 +46,11 @@ select, option, button {
 	height: 20px;
 			
 	font-size: 14px;
+	cursor: pointer;
+}
+
+br.class-clearfix {
+	clear: both;
 }
 
 @media screen and (min-width: 600px) {
