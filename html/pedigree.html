@@ -33,7 +33,7 @@
 		</div>
 		
 		<div id="id-traitExpressionDiv">
-			<form id="id-traitExpressionForm" onsubmit="return submitTraitExpression()">
+			<form id="id-traitExpressionForm" onsubmit="return submitTraitExpression()" method="post">
 				<h2> What is the Mode of Inheritance of the trait? </h2>
 			
 				<select name="name-traitExpression" required>
@@ -54,13 +54,18 @@
 				
 				<h3 id="id-dominantTrait"> Dominant: </h3>
 				<h3 id="id-recessiveTrait"> Recessive: </h3>
+				
+				<p id="id-traitDescription"> </p>
 			</div>
 			
-			<div id="id-traitQuestion">
+			<form id="id-traitAnalysisForm" onsubmit="return submitTraitAnalysis()" method="post">
 				<h2 id="id-question"> </h2>
 				
-				<select id="id-choices"> </select>
-			</div>
+				<select name="name-choices"> </select>
+				
+				<button type="submit" id="id-submitTraitAnalysis"> Submit </button>
+				<button type="button" id="id-nextQuestion" onclick="generateQuestion()"> New Question </button>
+			</form>
 		</div>
 		
 		<!-- JS Scripts (end) -->
