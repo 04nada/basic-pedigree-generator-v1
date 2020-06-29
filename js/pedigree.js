@@ -1,5 +1,3 @@
-
-
 $(document).ready(function() {
 	clearSVG();
 	resetContent();
@@ -22,7 +20,10 @@ window.addEventListener("orientationchange", function(){
 
 const eyeColor = new AutosomalTrait("Blue eye color", 'B', 'b', "brown eyes", "blue eyes", "recessive");
 eyeColor.setDescription(
-	"lorem ipsum dolor sit amet"
+	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed " +
+	"do eiusmod tempor incididunt ut labore et dolore magna aliqua. " + 
+	"Ut enim ad minim veniam, quis nostrud exercitation ullamco " +
+	"laboris nisi ut aliquip ex ea commodo consequat. "
 );
 
 const widowsPeak = new AutosomalTrait("Widow's peak", 'W', 'w', "widow's peak present", "widow's peak absent", "dominant");
@@ -47,8 +48,34 @@ const id_traitAnalysisDiv = document.getElementById("id-traitAnalysisDiv");
 		const id_traitName = document.getElementById("id-traitName");
 		const id_dominantTrait = document.getElementById("id-dominantTrait");
 		const id_recessiveTrait = document.getElementById("id-recessiveTrait");
+		const id_traitDescription = document.getElementById("id-traitDescription");
+	const id_traitAnalysisForm = document.getElementById("id-traitAnalysisForm");
+		const id_question = document.getElementById("id-question");
+		const id_nextQuestion = document.getElementById("id-nextQuestion");
 
 //---
+
+function clearSVG() {
+	while (id_pedigreeSVG.firstChild) {
+		id_pedigreeSVG.removeChild(id_pedigreeSVG.firstChild);
+	}
+}
+
+function resetContent() {
+	id_traitExpressionDiv.style.display = "none";
+	
+		id_traitExpressionOutput.innerHTML = "";
+		id_traitExpressionOutput.style.display = "none";
+	
+	id_traitAnalysisDiv.style.display = "none";
+		
+		const submit_expression = id_traitExpressionForm.elements["name-traitExpression"];
+		submit_expression.selectedIndex = 0;
+
+		id_traitInfo.style.display = "none";
+}
+
+//--- ----- 
 
 var activeTraitName, activeTrait;
 var ped1, pedGF, pedGM;
@@ -96,29 +123,7 @@ function generatePedigree() {
 		}
 }
 
-function clearSVG() {
-	while (id_pedigreeSVG.firstChild) {
-		id_pedigreeSVG.removeChild(id_pedigreeSVG.firstChild);
-	}
-}
-
 //--- -----
-
-function resetContent() {
-	id_traitExpressionDiv.style.display = "none";
-	
-		id_traitExpressionOutput.innerHTML = "";
-		id_traitExpressionOutput.style.display = "none";
-	
-	id_traitAnalysisDiv.style.display = "none";
-		
-		const submit_expression = id_traitExpressionForm.elements["name-traitExpression"];
-		submit_expression.selectedIndex = 0;
-
-		id_traitInfo.style.display = "none";
-}
-
-//---
 
 function submitTraitExpression() {
 	for (let el of id_traitExpressionForm.getAllFormElements()) {
@@ -142,10 +147,6 @@ function submitTraitExpression() {
 		id_traitExpressionOutput.innerHTML = "Incorrect: The trait is " + ped1.ActiveTrait.Expression + ".";
 	}
 	
-	//---
-	
-	
-	
 	//--- ----- Display Trait Info
 	
 	id_traitAnalysisDiv.style.display = "block";
@@ -159,7 +160,56 @@ function submitTraitExpression() {
 	id_dominantTrait.innerHTML = "Dominant (" + activeTrait.DominantAllele + "): " + activeTrait.DominantPhenotype;
 	id_recessiveTrait.innerHTML = "Recessive (" + activeTrait.RecessiveAllele + "): " + activeTrait.RecessivePhenotype;
 	
+	id_traitDescription.innerHTML = activeTrait.Description;
+	
 	//--- -----
+	
+	generateQuestion();
+	
+	return false;
+}
+
+//---
+
+var questionType;
+
+function generateQuestion() {
+	id_traitAnalysisForm.reset();
+	id_nextQuestion.style.display = "none";
+	
+	//---
+	
+	/*
+		01 - 
+		02 - given a specific PedigreeID, ask for genotype kind
+		03 - given a specific PedigreeID, ask for genotype alleles
+		04 - given a specific PedigreeID, ask for phenotype
+	*/
+	
+	questionType = 2//getRandomInteger(01, 04);
+
+	switch (questionType) {
+		case 01:
+			break;
+		case 02:
+			let randomPerson = ped1.Family.getRandomMember();
+			
+			id_question.innerHTML = "What kind of genotype does " + randomPerson.PedigreeID + " have?"
+			
+			//---
+			
+			let choices = document.createElement("select");
+			
+			
+			break;
+		default:
+			logError("generateQuestion()", "The given for the question could not be produced.");
+			return;
+	}
+}
+
+function submitTraitAnalysis() {
+	id_nextQuestion.style.display = "block";
 	
 	return false;
 }
