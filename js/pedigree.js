@@ -51,8 +51,10 @@ const id_traitAnalysisDiv = document.getElementById("id-traitAnalysisDiv");
 		const id_traitDescription = document.getElementById("id-traitDescription");
 	const id_traitAnalysisForm = document.getElementById("id-traitAnalysisForm");
 		const id_question = document.getElementById("id-question");
+		const id_submitTraitAnalysis = document.getElementById("id-submitTraitAnalysis");
+		const id_traitAnalysisOutput = document.getElementById("id-traitAnalysisOutput");
 		const id_nextQuestion = document.getElementById("id-nextQuestion");
-
+		
 //---
 
 function clearSVG() {
@@ -64,15 +66,16 @@ function clearSVG() {
 function resetContent() {
 	id_traitExpressionDiv.style.display = "none";
 	
+		id_traitExpressionForm.elements["name-traitExpression"].selectedIndex = 0;
+	
 		id_traitExpressionOutput.innerHTML = "";
 		id_traitExpressionOutput.style.display = "none";
 	
 	id_traitAnalysisDiv.style.display = "none";
-		
-		const submit_expression = id_traitExpressionForm.elements["name-traitExpression"];
-		submit_expression.selectedIndex = 0;
 
 		id_traitInfo.style.display = "none";
+		
+		resetTraitAnalysis();
 }
 
 //--- ----- 
@@ -123,19 +126,15 @@ function generatePedigree() {
 		}
 }
 
-//--- -----
-
 function submitTraitExpression() {
 	for (let el of id_traitExpressionForm.getAllFormElements()) {
 		el.disabled = true;
 		el.style.cursor = "not-allowed";
 	}
 	
-	//--- -----
-	
 	id_traitExpressionOutput.style.display = "block";
 	
-	//---
+	//--- -----
 	
 	const submit_expression = id_traitExpressionForm.elements["name-traitExpression"];
 	
@@ -171,44 +170,162 @@ function submitTraitExpression() {
 
 //---
 
+function resetTraitAnalysis() {
+	id_traitAnalysisForm.reset();
+	
+	id_traitAnalysisOutput.innerHTML = "";
+	id_traitAnalysisOutput.style.display = "none";
+	
+	id_nextQuestion.style.display = "none";
+	
+	// clear all input/select elements in the form when a new question is generated
+	let traitAnalysisInputs = document.getElementsByClassName("class-traitAnalysisInput");
+	
+	while (traitAnalysisInputs[0])
+		id_traitAnalysisForm.removeChild(traitAnalysisInputs[0]);
+	
+	for (let el of id_traitAnalysisForm.getAllFormElements()) {
+		el.disabled = false;
+		el.style.cursor = "pointer";
+	}
+}
+
 var questionType;
+var randomPerson;
 
 function generateQuestion() {
-	id_traitAnalysisForm.reset();
-	id_nextQuestion.style.display = "none";
+	resetTraitAnalysis();
 	
 	//---
 	
 	/*
 		01 - 
-		02 - given a specific PedigreeID, ask for genotype kind
-		03 - given a specific PedigreeID, ask for genotype alleles
-		04 - given a specific PedigreeID, ask for phenotype
+		02 - given a specific PedigreeID, ask for phenotype
+		03 - given a specific PedigreeID, ask for genotype
 	*/
 	
-	questionType = 2//getRandomInteger(01, 04);
+	questionType = getRandomInteger(02, 03);
 
 	switch (questionType) {
 		case 01:
 			break;
-		case 02:
-			let randomPerson = ped1.Family.getRandomMember();
+		case 02: {
+			randomPerson = ped1.Family.getRandomMember();
 			
-			id_question.innerHTML = "What kind of genotype does " + randomPerson.PedigreeID + " have?"
+			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s phenotype for " + activeTraitName.toLowerCase() + "?";
 			
 			//---
 			
-			let choices = document.createElement("select");
+			let select_phenotype = document.createElement("select");
+			select_phenotype.setAttribute("name", "name-choicePhenotype");
+			select_phenotype.setAttribute("class", "class-traitAnalysisInput");
+			select_phenotype.setAttribute("required", "required");
 			
+			let option_blank = document.createElement("option");
+			option_blank.setAttribute("hidden", "hidden");
+			option_blank.setAttribute("disabled", "disabled");
+			option_blank.setAttribute("selected", "selected");
+			select_phenotype.append(option_blank);
+			
+			let options = [
+				activeTrait.DominantPhenotype,
+				activeTrait.RecessivePhenotype
+			];
+			
+			for (let i = 0; i < options.length; i++) {
+				let opt = document.createElement("option");
+				opt.text = options[i];
+				opt.setAttribute("value", options[i]);
+				
+				select_phenotype.append(opt);
+			}
+			
+			id_traitAnalysisForm.insertBefore(select_phenotype, id_submitTraitAnalysis);
 			
 			break;
-		default:
+		} case 03: {
+			randomPerson = ped1.Family.getRandomMember();
+			
+			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s genotype for " + activeTraitName.toLowerCase() + "?";
+			
+			//---
+			
+			let select_zygosity = document.createElement("select");
+			select_zygosity.setAttribute("name", "name-choiceZygosity");
+			select_zygosity.setAttribute("class", "class-traitAnalysisInput");
+			select_zygosity.setAttribute("required", "required");
+			
+			let option_blank = document.createElement("option");
+			option_blank.setAttribute("hidden", "hidden");
+			option_blank.setAttribute("disabled", "disabled");
+			option_blank.setAttribute("selected", "selected");
+			select_zygosity.append(option_blank);
+			
+			let options = [
+				["Homozygous Dominant", "homozygous dominant"],
+				["Heterozygous", "heterozygous"],
+				["Homozygous Recessive", "homozygous recessive"],
+				["Cannot be determined", "unknown"]
+			];
+				
+			for (let i = 0; i < options.length; i++) {
+				let opt = document.createElement("option");
+				opt.text = options[i][0];
+				opt.setAttribute("value", options[i][1]);
+				
+				select_zygosity.append(opt);
+			}
+			
+			id_traitAnalysisForm.insertBefore(select_zygosity, id_submitTraitAnalysis);
+			
+			break;
+		} default:
 			logError("generateQuestion()", "The given for the question could not be produced.");
 			return;
 	}
 }
 
 function submitTraitAnalysis() {
+	id_traitAnalysisOutput.style.display = "block";
+	
+	switch (questionType) {
+		case 01:
+			break;
+		case 02:
+			if (randomPerson.AutosomalPhenotypes[activeTraitName] === id_traitAnalysisForm.elements["name-choicePhenotype"].value)
+				id_traitAnalysisOutput.innerHTML = "Correct: " + randomPerson.PedigreeID + " has " + randomPerson.AutosomalPhenotypes[activeTraitName];
+			else
+				id_traitAnalysisOutput.innerHTML = "Incorrect: " + randomPerson.PedigreeID + " has " + randomPerson.AutosomalPhenotypes[activeTraitName];
+			
+			for (let el of id_traitAnalysisForm.getAllFormElements()) {
+				el.disabled = true;
+				el.style.cursor = "not-allowed";
+			}
+			
+			break;
+		case 03:
+			if (randomPerson.Solver.SolvableZygosity === id_traitAnalysisForm.elements["name-choiceZygosity"].value)
+				id_traitAnalysisOutput.innerHTML = "Correct: " + randomPerson.PedigreeID;
+			else
+				id_traitAnalysisOutput.innerHTML = "Incorrect: " + randomPerson.PedigreeID;
+			
+			if (randomPerson.Solver.SolvableZygosity === "unknown")
+				id_traitAnalysisOutput.innerHTML += "'s zygosity cannot be determined.";
+			else
+				id_traitAnalysisOutput.innerHTML += " is " + randomPerson.Solver.SolvableZygosity + " for " + activeTraitName.toLowerCase();
+			
+			for (let el of id_traitAnalysisForm.getAllFormElements()) {
+				el.disabled = true;
+				el.style.cursor = "not-allowed";
+			}
+			
+			break;
+		default:
+			logError("submitTraitAnalysis()", "The question type could not be determined.");
+	}
+	
+	//--- -----
+	
 	id_nextQuestion.style.display = "block";
 	
 	return false;

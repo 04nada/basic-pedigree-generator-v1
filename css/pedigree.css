@@ -152,8 +152,13 @@
 			
 		}
 		
-		#id-choices {
+		#id-traitAnalysisOutput {
+			height: auto;
+		
+			margin: 20px auto;
+			padding: 15px;
 			
+			font-size: 16px;
 		}
 		
 		#id-nextQuestion {
@@ -185,8 +190,8 @@
 				
 			}
 			
-			#id-choices {
-				
+			#id-traitAnalysisOutput {
+				font-size: 24px;
 			}
 			
 			
