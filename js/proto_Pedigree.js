@@ -16,8 +16,6 @@ function Pedigree(activeTrait) {
 
 //--- Checking Pedigree validity
 
-const SVGWidth = parseFloat(document.getCSSPropertyById("id-pedigreeSVG", "width"));
-
 Pedigree.prototype.isContainableInSVG = function() {
 	var rightmost = this.Family.Members1[0];
 	
@@ -26,7 +24,9 @@ Pedigree.prototype.isContainableInSVG = function() {
 			rightmost = member;
 	}
 	
-	return ((rightmost.Symbol.X+SYMBOL_LENGTH_px) <= (SVGWidth - 2*SYMBOL_LENGTH_px))
+	const SVGWidth = parseFloat(document.getCSSPropertyById("id-pedigreeSVG", "width"));
+	
+	return ((rightmost.Symbol.X+SYMBOL_LENGTH_px) <= (SVGWidth - SYMBOL_LENGTH_px/2.0))
 }
 
 // checks if the pedigree trait is solvable, while simultaneously assigning genotype solvability
@@ -41,24 +41,33 @@ Pedigree.prototype.isSolvable = function(){
 			this.Family.MembersBySolvableGenotype.Recessive.push(person1);
 		} 
 		else {
-			if (person1.Father != null){
-				if ((person1.Father.AutosomalPhenotypes[this.ActiveTrait.TraitName] === this.ActiveTrait.RecessivePhenotype ) || (person1.Mother.AutosomalPhenotypes[this.ActiveTrait.TraitName] === this.ActiveTrait.RecessivePhenotype )){
+			if (person1.Father != null) {
+				var phenoM = person1.Mother.AutosomalPhenotypes[this.ActiveTrait.TraitName]
+				var phenoF = person1.Father.AutosomalPhenotypes[this.ActiveTrait.TraitName];
+				
+				// (tt x __ = T_) -> (child is Tt)
+				// If a person with an unknown genotype has the trait (T_) but a parent does not (tt).
+				//     then the person must be heterozygous (Tt)
+				if ((phenoM === this.ActiveTrait.RecessivePhenotype ) || (phenoF === this.ActiveTrait.RecessivePhenotype )) {
 					this.Family.MembersBySolvableGenotype.Heterozygous.push(person1);
-					console.log("YES" + person1.PedigreeID);
+					
 					continue allMembers;
 				}
 			}
+			
 			if (person1.Partner != null) {
 				var pheno2 = person1.Partner.AutosomalPhenotypes[this.ActiveTrait.TraitName];
 			
 				for (let child of person1.Children) {
 					let phenoC = child.AutosomalPhenotypes[this.ActiveTrait.TraitName];
 					
+					// (T_ x __ = tt) -> (parent is Tt)
+					// If a person with an unknown genotype has the trait (T_) but a child does not (tt),
+					//     then the person must be heterozygous (Tt)
 					if (phenoC === this.ActiveTrait.RecessivePhenotype) {
-						// T_ x __ = tt implies that the parent is Tt
 						this.Family.MembersBySolvableGenotype.Heterozygous.push(person1);
 						
-						// the trait is solvable iff some two parents with the same phenotype have a child with a different
+						// the trait is solvable if some two parents with the same phenotype have a child with a different
 						//     phenotype, which implies the 2 parents being heterozygous and the child being recessive
 						if (pheno1 === pheno2) {
 							solvable = true;
@@ -152,15 +161,15 @@ Pedigree.prototype.layoutChildren = function(parent1, parent2) {
 		
 		//--- Descendant Line (connects Marriage Line to Sibling Line vertically)
 		
-		var descendantLine = Line.init2(
+		var lineOfDescent = Line.init2(
 			symbol1.SVG.MarriageLine.CenterX,
 			symbol1.SVG.MarriageLine.CenterY,
 			(SYMBOL_LENGTH_px),
 			"down"
 		);
 		
-		symbol1.SVG.DescendantLine = descendantLine;
-		symbol2.SVG.DescendantLine = descendantLine;
+		symbol1.SVG.LineOfDescent = lineOfDescent;
+		symbol2.SVG.LineOfDescent = lineOfDescent;
 		
 		//--- Aligning Child Symbols based on parent Symbol positions
 		
@@ -170,7 +179,7 @@ Pedigree.prototype.layoutChildren = function(parent1, parent2) {
 			let center = (numberOfChildren - 1)/2;
 			let centerChild = parent1.Children[center];
 			
-			centerChild.Symbol.setPositionX(symbol1.SVG.DescendantLine.CenterX - (SYMBOL_LENGTH_px/2));
+			centerChild.Symbol.setPositionX(symbol1.SVG.LineOfDescent.CenterX - (SYMBOL_LENGTH_px/2));
 			
 			for (let i = center-1; i >= 0; i--) {
 				child = parent1.Children[i];
@@ -345,10 +354,10 @@ Pedigree.prototype.PRIV_adjustFrom = function(person, dx) {
 		
 		//---
 		
-		// translate each MarriageLine and DescendantLine for every pair
+		// translate each MarriageLine and LineOfDescent for every pair
 		// exclude partners from the for loop to avoid duplicate counting
 		let mML = member.Symbol.SVG.MarriageLine;
-		let mDL = member.Symbol.SVG.DescendantLine;
+		let mDL = member.Symbol.SVG.LineOfDescent;
 		
 		if (mML != null)
 			mML.translatePosition(dx, 0);
@@ -388,7 +397,7 @@ Pedigree.prototype.drawChildren = function(parent1, parent2) {
 		//---
 		
 		// Descendant Line
-		id_pedigreeSVG.append(symbol1.SVG.DescendantLine.SVG.Element);
+		id_pedigreeSVG.append(symbol1.SVG.LineOfDescent.SVG.Element);
 		
 		// Ancestor Lines
 		for (let child of parent1.Children)
