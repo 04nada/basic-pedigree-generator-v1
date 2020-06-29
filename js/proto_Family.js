@@ -62,3 +62,12 @@ Family.prototype.PRIV_continueFamily = function(person) {
 		}
 	}
 }
+
+//--- -----
+
+Family.prototype.getRandomMember = function(withPartners) {
+	var memberArray = (withPartners) ? this.Members1 : this.Members2;
+	var randomIndex = getRandomInteger(0, memberArray.length-1);
+		
+	return memberArray[randomIndex];
+}
