@@ -48,14 +48,14 @@ function Person(generation = 1, sex = Person.generateRandomSex()) {
 	
 	this.AutosomalGenes = {};
 	this.AutosomalPhenotypes = {};
+	this.AutosomalZygosities = {};
 	
 	//---
 	
-	// can/will cause circular referencing
 	this.Mother = (this.Generation === 1) ? null : undefined; // {}
 	this.Father = (this.Generation === 1) ? null : undefined; // {}
 	this.Partner = undefined; // {}
-	this.ChildOrder = undefined;
+	this.ChildOrder = undefined; // int
 	this.Children = undefined; // [{}]
 }
 
@@ -84,12 +84,25 @@ Person.prototype.assignRandomGenes = function() {
 	this.PRIV_assignPhenotypes();
 }
 
+Person.prototype.assignZygosities = function() {
+	var autosomalZygosities = {};
+	
+	for (let traitName in DefinedAutosomalTraits) {
+		let currentTrait = DefinedAutosomalTraits[traitName];
+		let currentGene = this.AutosomalGenes[traitName];
+		
+		autosomalZygosities[traitName] = currentTrait.PRIV_getZygosityFromGene(currentGene);
+	}
+	
+	this.AutosomalZygosities = autosomalZygosities;
+}
+
 Person.prototype.PRIV_assignPhenotypes = function() {
 	var autosomalPhenotypes = {};
 	
 	for (let traitName in DefinedAutosomalTraits) {
 		let currentTrait = DefinedAutosomalTraits[traitName];
-		let currentGene = this.AutosomalGenes[traitName]
+		let currentGene = this.AutosomalGenes[traitName];
 		
 		autosomalPhenotypes[traitName] = currentTrait.PRIV_getPhenotypeFromGene(currentGene);
 	}

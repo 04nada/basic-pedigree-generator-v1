@@ -59,6 +59,19 @@ AutosomalTrait.prototype.PRIV_generateRandomGene = function() {
 	}
 }
 
+AutosomalTrait.prototype.PRIV_getZygosityFromGene = function(gene) {
+	if (gene.toLowerCase() !== (this.RecessiveAllele + this.RecessiveAllele)) {
+		logError("AutosomalTrait.getPhenotypeFromGene()", "Gene is invalid and cannot give a phenotype.");
+	} else {
+		if (gene.toUpperCase() === gene)
+			return "homozygous dominant";
+		else if (gene.toLowerCase() === gene)
+			return "homozygous recessive";
+		else
+			return "heterozygous";
+	}
+}
+
 AutosomalTrait.prototype.PRIV_getPhenotypeFromGene = function(gene) {
 	if (gene.toLowerCase() !== (this.RecessiveAllele + this.RecessiveAllele)) {
 		logError("AutosomalTrait.getPhenotypeFromGene()", "Gene is invalid and cannot give a phenotype.");
