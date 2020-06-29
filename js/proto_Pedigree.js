@@ -39,7 +39,15 @@ Pedigree.prototype.isSolvable = function(){
 		
 		if (pheno1 === this.ActiveTrait.RecessivePhenotype) {
 			this.Family.MembersBySolvableGenotype.Recessive.push(person1);
-		} else {
+		} 
+		else {
+			if (person1.Father != null){
+				if ((person1.Father.AutosomalPhenotypes[this.ActiveTrait.TraitName] === this.ActiveTrait.RecessivePhenotype ) || (person1.Mother.AutosomalPhenotypes[this.ActiveTrait.TraitName] === this.ActiveTrait.RecessivePhenotype )){
+					this.Family.MembersBySolvableGenotype.Heterozygous.push(person1);
+					console.log("YES" + person1.PedigreeID);
+					continue allMembers;
+				}
+			}
 			if (person1.Partner != null) {
 				var pheno2 = person1.Partner.AutosomalPhenotypes[this.ActiveTrait.TraitName];
 			
