@@ -7,8 +7,8 @@ function Pedigree(activeTrait) {
 	
 	this.Family = new Family();
 	
-	for (let f of this.Family.Members1) {
-		let s = new Symbol(f, activeTrait);
+	for (let p of this.Family.Members1) {
+		let s = new Symbol(p, activeTrait);
 	}
 	
 	this.Family.Grandfather.Symbol.setPositionX(3.5 * SYMBOL_LENGTH_px);
@@ -35,12 +35,14 @@ Pedigree.prototype.isSolvable = function(){
 	
 	allMembers:
 	for (let person1 of this.Family.Members1) {
+		person1.Solver = {};
+		
 		var pheno1 = person1.AutosomalPhenotypes[this.ActiveTrait.TraitName];
 		
 		if (pheno1 === this.ActiveTrait.RecessivePhenotype) {
 			this.Family.MembersBySolvableGenotype.Recessive.push(person1);
-		} 
-		else {
+			person1.Solver.SolvableZygosity = "homozygous recessive";
+		} else {
 			if (person1.Father != null) {
 				var phenoM = person1.Mother.AutosomalPhenotypes[this.ActiveTrait.TraitName]
 				var phenoF = person1.Father.AutosomalPhenotypes[this.ActiveTrait.TraitName];
@@ -50,6 +52,7 @@ Pedigree.prototype.isSolvable = function(){
 				//     then the person must be heterozygous (Tt)
 				if ((phenoM === this.ActiveTrait.RecessivePhenotype ) || (phenoF === this.ActiveTrait.RecessivePhenotype )) {
 					this.Family.MembersBySolvableGenotype.Heterozygous.push(person1);
+					person1.Solver.SolvableZygosity = "heterozygous";
 					
 					continue allMembers;
 				}
@@ -66,6 +69,7 @@ Pedigree.prototype.isSolvable = function(){
 					//     then the person must be heterozygous (Tt)
 					if (phenoC === this.ActiveTrait.RecessivePhenotype) {
 						this.Family.MembersBySolvableGenotype.Heterozygous.push(person1);
+						person1.Solver.SolvableZygosity = "heterozygous";
 						
 						// the trait is solvable if some two parents with the same phenotype have a child with a different
 						//     phenotype, which implies the 2 parents being heterozygous and the child being recessive
@@ -82,6 +86,7 @@ Pedigree.prototype.isSolvable = function(){
 			
 			// these lines run if none of the children are recessive, since the identity being TT or Tt cannot be determined
 			this.Family.MembersBySolvableGenotype.Unknown.push(person1);
+			person1.Solver.SolvableZygosity = "unknown";
 		}
 	}
 	
