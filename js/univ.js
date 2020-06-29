@@ -102,7 +102,7 @@ HTMLDocument.prototype.getCSSPropertyById = function(id, property) {
 }
 
 Element.prototype.getAllFormElements = function() {
-	return this.querySelectorAll("input, select, option, textarea, button");
+	return this.querySelectorAll("input, select, option, textarea, button[type=\"submit\"]");
 }
 
 //--- ----- Console Logging
@@ -114,3 +114,7 @@ function logError(source, message) {
 function logDebug(source, message) {
 	console.log("<" + source + "> DEBUG: " + message);
 }
+
+//--- -----
+
+{let aqua = 0;}
