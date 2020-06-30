@@ -17,10 +17,31 @@
 }
 
 body {
-	margin: 0px;
+	margin: 4vw 0 0 0;
 	padding-bottom: 100px;
-	
+	background-color: beige;
 	font-family: "Lustria Regular";
+}
+
+#id-header{
+	position:absolute;
+	top:0;
+	height: 3vw;
+	width: 100vw;
+	padding: 0 0 1vw 0;
+	background-color:lightgray;
+}
+
+#id-header div{
+	height:3vw;
+	float:left;
+	padding: 1vw 20px 0 5px;
+	font-size:1.8vw;
+	color: white;
+}
+
+#id-header div:hover{
+	background-color:gray;
 }
 
 h2 {

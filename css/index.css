@@ -1,35 +1,38 @@
-@font-face {
-	font-family: Lustria Regular;
-	src: url("../resources/fonts/Lustria-Regular.ttf");
+
+body{
+	background-color: beige;
 }
+
 #id-mainDiv{
 	width: 95vw;
 	height: auto;
-	background-color: beige;
 	display: block;
-	margin: 5vh auto;
+	margin: 0;
 	font-size: 2.4vw;
 	text-align: justify;
 	font-family: Lustria Regular;
-	padding: 10px;
 }
+
 .imgDiv{
-	float:right;
+	float: right;
 	text-align: center;
 	font-size: 1.5vw;
 	margin: 0 20px 0 20px;
 	width: 30vw;
 }
+
 @media screen and (min-width: 600px) {
 	#id-mainDiv{
 		font-size: 1.5vw;
 		padding: 20px;
 	}
+	
 	.imgDiv{
 		width: 18vw;
 		font-size: .8vw;
 	}
 }
+
 p{
 	text-indent:5vw;
 }
