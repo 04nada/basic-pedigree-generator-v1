@@ -20,6 +20,7 @@ function AutosomalTrait(traitName, char_dominantAllele, char_recessiveAllele, do
 		this.Expression = expression;	
 	
 		this.Description = "";
+		this.PrintablePhenotypes = {};
 		
 		DefinedAutosomalTraits[this.TraitName] = this;
 	}
@@ -42,6 +43,11 @@ AutosomalTrait.prototype.setDescription = function(description) {
 	this.Description = description;
 }
 
+AutosomalTrait.prototype.setPrintablePhenotypes = function(printableDominant, printableRecessive) {
+	this.PrintablePhenotypes.Dominant = printableDominant;
+	this.PrintablePhenotypes.Recessive = printableRecessive;
+}
+
 AutosomalTrait.prototype.PRIV_generateRandomGene = function() {
 	var D = this.DominantAllele;
 	var R = this.RecessiveAllele;
@@ -59,7 +65,7 @@ AutosomalTrait.prototype.PRIV_generateRandomGene = function() {
 	}
 }
 
-AutosomalTrait.prototype.PRIV_getZygosityFromGene = function(gene) {
+AutosomalTrait.prototype.getZygosityFromGene = function(gene) {
 	if (gene.toLowerCase() !== (this.RecessiveAllele + this.RecessiveAllele)) {
 		logError("AutosomalTrait.getPhenotypeFromGene()", "Gene is invalid and cannot give a phenotype.");
 	} else {
@@ -72,7 +78,7 @@ AutosomalTrait.prototype.PRIV_getZygosityFromGene = function(gene) {
 	}
 }
 
-AutosomalTrait.prototype.PRIV_getPhenotypeFromGene = function(gene) {
+AutosomalTrait.prototype.getPhenotypeFromGene = function(gene) {
 	if (gene.toLowerCase() !== (this.RecessiveAllele + this.RecessiveAllele)) {
 		logError("AutosomalTrait.getPhenotypeFromGene()", "Gene is invalid and cannot give a phenotype.");
 	} else {
@@ -81,6 +87,17 @@ AutosomalTrait.prototype.PRIV_getPhenotypeFromGene = function(gene) {
 		else
 			return this.DominantPhenotype;
 	}	
+}
+
+AutosomalTrait.prototype.getPrintablePhenotypeFromGene = function(gene) {
+		if (gene.toLowerCase() !== (this.RecessiveAllele + this.RecessiveAllele)) {
+		logError("AutosomalTrait.getPrintablePhenotypeFromGene()", "Gene is invalid and cannot give a phenotype.");
+	} else {
+		if (gene.toLowerCase() === gene)
+			return this.PrintablePhenotypes.Recessive;
+		else
+			return this.PrintablePhenotypes.Dominant;
+	}
 }
 
 //---
