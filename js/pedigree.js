@@ -19,6 +19,10 @@ window.addEventListener("orientationchange", function(){
 //--- ----- Autosomal Traits
 
 const eyeColor = new AutosomalTrait("Blue eye color", 'B', 'b', "brown eyes", "blue eyes", "recessive");
+eyeColor.setPrintablePhenotypes(
+	"has brown eyes",
+	"has blue eyes"
+);
 eyeColor.setDescription(
 	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed " +
 	"do eiusmod tempor incididunt ut labore et dolore magna aliqua. " + 
@@ -27,11 +31,19 @@ eyeColor.setDescription(
 );
 
 const widowsPeak = new AutosomalTrait("Widow's peak", 'W', 'w', "widow's peak present", "widow's peak absent", "dominant");
+widowsPeak.setPrintablePhenotypes(
+	"has a widow's peak",
+	"has no widow's peak"
+);
 widowsPeak.setDescription(
 	"describe here"
 );
 
 const tritanopia = new AutosomalTrait("Tritanopia", "T", "t", "blue-yellow colorblind", "not colorblind", "dominant");
+tritanopia.setPrintablePhenotypes(
+	"is blue-yellow colorblind",
+	"is not blue-yellow colorblind"
+);
 tritanopia.setDescription(
 	"blue-yellow colorblindness"
 );
@@ -211,7 +223,7 @@ function generateQuestion() {
 			break;
 		case 02: {
 			randomPerson = ped1.Family.getRandomMember();
-			
+			console.log(randomPerson.AutosomalZygosities);
 			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s phenotype for " + activeTraitName.toLowerCase() + "?";
 			
 			//---
@@ -242,11 +254,12 @@ function generateQuestion() {
 			
 			id_traitAnalysisForm.insertBefore(select_phenotype, id_submitTraitAnalysis);
 			
+			
 			break;
 		} case 03: {
 			randomPerson = ped1.Family.getRandomMember();
 			
-			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s genotype for " + activeTraitName.toLowerCase() + "?";
+			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s zygosity for " + activeTraitName.toLowerCase() + "?";
 			
 			//---
 			
@@ -292,10 +305,13 @@ function submitTraitAnalysis() {
 		case 01:
 			break;
 		case 02:
-			if (randomPerson.AutosomalPhenotypes[activeTraitName] === id_traitAnalysisForm.elements["name-choicePhenotype"].value)
-				id_traitAnalysisOutput.innerHTML = "Correct: " + randomPerson.PedigreeID + " has " + randomPerson.AutosomalPhenotypes[activeTraitName];
-			else
-				id_traitAnalysisOutput.innerHTML = "Incorrect: " + randomPerson.PedigreeID + " has " + randomPerson.AutosomalPhenotypes[activeTraitName];
+			let guessedPhenotype = id_traitAnalysisForm.elements["name-choicePhenotype"].value;
+			let correctPhenotype = randomPerson.AutosomalPhenotypes[activeTraitName];
+		
+			id_traitAnalysisOutput.innerHTML = (guessedPhenotype === correctPhenotype) ? "Correct: " : "Incorrect: ";
+			id_traitAnalysisOutput.innerHTML += randomPerson.PedigreeID + " " + activeTrait.getPrintablePhenotypeFromGene(randomPerson.AutosomalGenes[activeTraitName]) + ".";
+			
+			//---
 			
 			for (let el of id_traitAnalysisForm.getAllFormElements()) {
 				el.disabled = true;
@@ -303,16 +319,18 @@ function submitTraitAnalysis() {
 			}
 			
 			break;
-		case 03:
-			if (randomPerson.Solver.SolvableZygosity === id_traitAnalysisForm.elements["name-choiceZygosity"].value)
-				id_traitAnalysisOutput.innerHTML = "Correct: " + randomPerson.PedigreeID;
-			else
-				id_traitAnalysisOutput.innerHTML = "Incorrect: " + randomPerson.PedigreeID;
+		case 03: {
+			let guessedZygosity = id_traitAnalysisForm.elements["name-choiceZygosity"].value;
+			let correctZygosity = randomPerson.Solver.SolvableZygosity;
+			
+			id_traitAnalysisOutput.innerHTML = (guessedZygosity === correctZygosity) ? "Correct: " : "Incorrect: ";
 			
 			if (randomPerson.Solver.SolvableZygosity === "unknown")
-				id_traitAnalysisOutput.innerHTML += "'s zygosity cannot be determined.";
+				id_traitAnalysisOutput.innerHTML += randomPerson.PedigreeID + "'s zygosity cannot be determined.";
 			else
-				id_traitAnalysisOutput.innerHTML += " is " + randomPerson.Solver.SolvableZygosity + " for " + activeTraitName.toLowerCase();
+				id_traitAnalysisOutput.innerHTML += randomPerson.PedigreeID + " is " + randomPerson.Solver.SolvableZygosity + " for " + activeTraitName.toLowerCase();
+			
+			//---
 			
 			for (let el of id_traitAnalysisForm.getAllFormElements()) {
 				el.disabled = true;
@@ -320,7 +338,7 @@ function submitTraitAnalysis() {
 			}
 			
 			break;
-		default:
+		} default:
 			logError("submitTraitAnalysis()", "The question type could not be determined.");
 	}
 	
