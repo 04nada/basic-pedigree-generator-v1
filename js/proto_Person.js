@@ -81,20 +81,22 @@ Person.prototype.assignRandomGenes = function() {
 	
 	this.AutosomalGenes = autosomalGenes;
 	
+	this.PRIV_assignZygosities();
 	this.PRIV_assignPhenotypes();
 }
 
-Person.prototype.assignZygosities = function() {
+Person.prototype.PRIV_assignZygosities = function() {
 	var autosomalZygosities = {};
 	
 	for (let traitName in DefinedAutosomalTraits) {
 		let currentTrait = DefinedAutosomalTraits[traitName];
 		let currentGene = this.AutosomalGenes[traitName];
 		
-		autosomalZygosities[traitName] = currentTrait.PRIV_getZygosityFromGene(currentGene);
+		autosomalZygosities[traitName] = currentTrait.getZygosityFromGene(currentGene);
 	}
 	
 	this.AutosomalZygosities = autosomalZygosities;
+	console.log(this.AutosomalZygosities);
 }
 
 Person.prototype.PRIV_assignPhenotypes = function() {
@@ -104,55 +106,11 @@ Person.prototype.PRIV_assignPhenotypes = function() {
 		let currentTrait = DefinedAutosomalTraits[traitName];
 		let currentGene = this.AutosomalGenes[traitName];
 		
-		autosomalPhenotypes[traitName] = currentTrait.PRIV_getPhenotypeFromGene(currentGene);
+		autosomalPhenotypes[traitName] = currentTrait.getPhenotypeFromGene(currentGene);
 	}
 	
 	this.AutosomalPhenotypes = autosomalPhenotypes;
 }
-
-//--- Person getter functions
-
-// gets a subFamily consisting of a Person and all their descendants
-Person.prototype.getSubfamily_DF = function(withPartners) {
-	var subfamily = [];
-	
-	subfamily.push(this);
-	
-	if (this.Partner != null) {
-		subfamily.push(this.Partner);
-	}
-	
-	subfamily.push(this.getAllDescendants_DF(withPartners));
-	subfamily = subfamily.flat(Infinity);
-	
-	return subfamily;
-}
-
-// (Depth-First Search) recursively gets all Children, (?) their Partners, and their Children's Descendants
-Person.prototype.getAllDescendants_DF = function(withPartners) {
-	if (this.Children == null) {
-		return [];
-	} else {
-		var descendants = [];
-
-		for (let i = 0; i < this.Children.length; i++) {
-			child = this.Children[i];
-			
-			descendants.push(child);
-			
-			if ((child.Partner != null) && withPartners) {
-				descendants.push(child.Partner);
-			}
-			
-			descendants.push(child.getAllDescendants_DF(withPartners));
-		}
-		
-		descendants = descendants.flat(Infinity);
-		
-		return descendants;
-	}
-}
-
 
 //--- Person Gene functions
 
@@ -177,7 +135,7 @@ Person.prototype.getPhenotype = function(traitName) {
 		var trait = DefinedAutosomalTraits[traitName];
 		var gene = this.AutosomalGenes[traitName];
 		
-		return trait.PRIV_getPhenotypeFromGene(gene);
+		return trait.getPhenotypeFromGene(gene);
 	}
 }
 
@@ -304,6 +262,7 @@ Person.PRIV_makeChild = function(person1, person2) {
 		child.PRIV_addAutosomalGene(arr_traitnames[i], arr_genes[i]);
 	}
 	
+	child.PRIV_assignZygosities();
 	child.PRIV_assignPhenotypes();
 	child.ChildOrder = person1.Children.length + 1;
 	
@@ -321,4 +280,47 @@ Person.PRIV_makeChild = function(person1, person2) {
 	person2.Children.push(child);
 	
 	return child;
+}
+
+//--- ----- Person family traversal
+
+// gets a subFamily consisting of a Person and all their descendants
+Person.prototype.getSubfamily_DF = function(withPartners) {
+	var subfamily = [];
+	
+	subfamily.push(this);
+	
+	if (this.Partner != null) {
+		subfamily.push(this.Partner);
+	}
+	
+	subfamily.push(this.getAllDescendants_DF(withPartners));
+	subfamily = subfamily.flat(Infinity);
+	
+	return subfamily;
+}
+
+// (Depth-First Search) recursively gets all Children, (?) their Partners, and their Children's Descendants
+Person.prototype.getAllDescendants_DF = function(withPartners) {
+	if (this.Children == null) {
+		return [];
+	} else {
+		var descendants = [];
+
+		for (let i = 0; i < this.Children.length; i++) {
+			child = this.Children[i];
+			
+			descendants.push(child);
+			
+			if ((child.Partner != null) && withPartners) {
+				descendants.push(child.Partner);
+			}
+			
+			descendants.push(child.getAllDescendants_DF(withPartners));
+		}
+		
+		descendants = descendants.flat(Infinity);
+		
+		return descendants;
+	}
 }
