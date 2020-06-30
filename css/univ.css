@@ -19,29 +19,8 @@
 body {
 	margin: 9vh 0 0 0;
 	padding-bottom: 100px;
-	background-color: beige;
+	background-color: #FFE;
 	font-family: "Lustria Regular";
-}
-
-#id-header{
-	position:absolute;
-	top:0;
-	height: 6vh;
-	width: 100vw;
-	padding: 0 0 0.5vh 0;
-	background-color:lightgray;
-}
-
-#id-header div{
-	height:6vh;
-	float: left;
-	padding: 0.5vh 20px 0 5px;
-	font-size: 3vh;
-	color: white;
-}
-
-#id-header div:hover{
-	background-color:gray;
 }
 
 h2 {
@@ -59,6 +38,35 @@ h3 {
 	font-size: 14px;
 }
 
+/* Header */
+
+#id-header {
+	position: absolute;
+	background-color: #FA5;
+	
+	top: 0;
+	height: 6vh;
+	width: 100vw;
+	padding: 0 0 0.5vh 0;
+}
+
+#id-header div {
+	float: left;
+	color: white;
+	
+	height: 6vh;
+	padding: 0.5vh 20px 0 5px;
+	
+	font-size: 3vh;
+	text-align: center;
+}
+
+#id-header div:hover{
+	background-color:gray;
+}
+
+/* Forms */
+
 form {
 	text-align: center;
 }
@@ -70,24 +78,15 @@ select, option, button {
 	cursor: pointer;
 }
 
+/* Float-Clear Fix */
+
 br.class-clearfix {
 	clear: both;
 }
 
 @media screen and (min-width: 600px) {
-	body{
+	body {
 		margin: 9vh 0 0 0;
-	}
-	
-	#id-header{
-		height: 8vh;
-		padding: 0 0 1vh 0;
-	}
-	
-	#id-header div{
-		height: 8vh;
-		padding: 1vh 20px 0 5px;
-		font-size: 4vh;
 	}
 	
 	h2 {
@@ -97,6 +96,22 @@ br.class-clearfix {
 	h3 {
 		font-size: 16px;
 	}
+	
+	/* Header */
+		
+	#id-header {
+		height: 8vh;
+		padding: 0 0 1vh 0;
+	}
+	
+	#id-header div {
+		height: 8vh;
+		padding: 1vh 20px 0 5px;
+		
+		font-size: 4vh;
+	}
+	
+	/* Forms */
 	
 	select, option, button {
 		height: 24px;
