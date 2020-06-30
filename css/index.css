@@ -33,6 +33,10 @@ body{
 	}
 }
 
+h2{
+		text-align: left;
+}
+
 p{
 	text-indent:5vw;
 }
