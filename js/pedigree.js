@@ -4,7 +4,7 @@ $(document).ready(function() {
 	
 	id_pedigreeSVG.style.height = (2 * MAX_GENERATION * SYMBOL_LENGTH_px) + "px";
 	
-	alert(SYMBOL_LENGTH_px);
+	// alert(SYMBOL_LENGTH_px);
 });
 
 // resize SVG when device is rotated

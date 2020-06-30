@@ -1,0 +1,30 @@
+@font-face {
+	font-family: Lustria Regular;
+	src: url("../resources/fonts/Lustria-Regular.ttf");
+}
+#mainDiv{
+	width: 95vw;
+	height: auto;
+	background-color: beige;
+	display: block;
+	margin: 5vh auto;
+	font-size: 2.2vw;
+	text-align: justify;
+	font-family: Lustria Regular;
+}
+p{
+	text-indent:5vw;
+}
+.imgDiv{
+	float:right;
+	text-align: center;
+	font-size: 1.5vw;
+	margin: 0 20px 0 20px;
+	width: 30vw;
+}
+.imgDiv img{
+	border-style: solid;
+	border-color: black;
+	border-width: 1px;
+	width: 30vw;
+}
