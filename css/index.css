@@ -2,7 +2,7 @@
 	font-family: Lustria Regular;
 	src: url("../resources/fonts/Lustria-Regular.ttf");
 }
-#mainDiv{
+#id-mainDiv{
 	width: 95vw;
 	height: auto;
 	background-color: beige;
