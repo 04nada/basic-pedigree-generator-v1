@@ -8,12 +8,9 @@
 	background-color: beige;
 	display: block;
 	margin: 5vh auto;
-	font-size: 2.2vw;
+	font-size: 2.4vw;
 	text-align: justify;
 	font-family: Lustria Regular;
-}
-p{
-	text-indent:5vw;
 }
 .imgDiv{
 	float:right;
@@ -22,9 +19,22 @@ p{
 	margin: 0 20px 0 20px;
 	width: 30vw;
 }
+@media screen and (min-width: 600px) {
+	#id-mainDiv{
+		font-size: 1.5vw;
+	}
+	.imgDiv{
+		width: 18vw;
+		font-size: .8vw;
+	}
+}
+p{
+	text-indent:5vw;
+}
+
 .imgDiv img{
 	border-style: solid;
 	border-color: black;
 	border-width: 1px;
-	width: 30vw;
+	width: inherit;
 }
