@@ -67,7 +67,7 @@ const id_traitAnalysisDiv = document.getElementById("id-traitAnalysisDiv");
 		const id_traitAnalysisOutput = document.getElementById("id-traitAnalysisOutput");
 		const id_nextQuestion = document.getElementById("id-nextQuestion");
 		
-//---
+//--- -----
 
 function clearSVG() {
 	while (id_pedigreeSVG.firstChild) {
@@ -78,19 +78,8 @@ function clearSVG() {
 function resetContent() {
 	id_traitExpressionDiv.style.display = "none";
 	
-		id_traitExpressionForm.elements["name-traitExpression"].selectedIndex = 0;
-	
-		id_traitExpressionOutput.innerHTML = "";
-		id_traitExpressionOutput.style.display = "none";
-	
 	id_traitAnalysisDiv.style.display = "none";
-
-		id_traitInfo.style.display = "none";
-		
-		resetTraitAnalysis();
 }
-
-//--- ----- 
 
 var activeTraitName, activeTrait;
 var ped1, pedGF, pedGM;
@@ -99,7 +88,7 @@ function generatePedigree() {
 	console.clear();
 	resetContent();
 	
-	//--- Pedigree Generation
+	//--- ----- Pedigree Generation
 	
 	// choose a random trait for the pedigree
 	activeTraitName = Object.keys(DefinedAutosomalTraits).getRandomElement();
@@ -119,52 +108,73 @@ function generatePedigree() {
 			break;
 	}
 	
+	// log sorted family in console
 	console.log("by Generation: ");
 	console.log(ped1.Family.Generations);
 	
 	console.log("by Genotype: ");
 	console.log(ped1.Family.MembersBySolvableGenotype);
 	
-	//--- Display HTML Divs
+	//--- ----- Display Trait Expression
 	
 	id_traitExpressionDiv.style.display = "block";
 	
-		id_submitTraitExpression.disabled = false;
-		id_submitTraitExpression.style.cursor = "pointer";
-		
-		for (let el of id_traitExpressionForm.getAllFormElements()) {
-			el.disabled = false;
-			el.style.cursor = "pointer";
-		}
+	resetTraitExpression();
+}
+
+//----- 
+
+function resetTraitExpression() {
+	// select "blank" option by default
+	id_traitExpressionForm.elements["name-traitExpression"].selectedIndex = 0;
+	
+	// enable interaction with Trait Expression form elements
+	for (let el of id_traitExpressionForm.getAllFormElements()) {
+		el.disabled = false;
+		el.style.cursor = "pointer";
+	}
+	
+	// clear and hide Trait Expression output
+	id_traitExpressionOutput.innerHTML = "";
+	id_traitExpressionOutput.style.display = "none";
 }
 
 function submitTraitExpression() {
+	// disable interaction with Trait Expression form elements
 	for (let el of id_traitExpressionForm.getAllFormElements()) {
 		el.disabled = true;
 		el.style.cursor = "not-allowed";
 	}
 	
+	// show Trait Expression output
 	id_traitExpressionOutput.style.display = "block";
 	
-	//--- -----
+	//--- ----- Check Answer to Trait Expression
 	
 	const submit_expression = id_traitExpressionForm.elements["name-traitExpression"];
 	
 	if (submit_expression.value === ped1.ActiveTrait.Expression) {
 		id_traitExpressionOutput.style.backgroundColor = "#BFB";
-		id_traitExpressionOutput.innerHTML = "Correct: The trait is " + ped1.ActiveTrait.Expression + ".";
+		id_traitExpressionOutput.innerHTML = "Correct: ";
 	} else {
 		id_traitExpressionOutput.style.backgroundColor = "#FBB";
-		id_traitExpressionOutput.innerHTML = "Incorrect: The trait is " + ped1.ActiveTrait.Expression + ".";
+		id_traitExpressionOutput.innerHTML = "Incorrect: ";
 	}
 	
-	//--- ----- Display Trait Info
+	id_traitExpressionOutput.innerHTML += "The trait is " + ped1.ActiveTrait.Expression + ".";
 	
-	id_traitAnalysisDiv.style.display = "block";
+	//--- ----- Display Trait Analysis
 	
-		id_traitInfo.style.display = "block";
-	
-	//---
+	switch (minBreakpoint) {
+		case "600px":
+			id_traitAnalysisDiv.style.display = "flex";
+			break;
+		default:
+			id_traitAnalysisDiv.style.display = "block";
+			break;
+	}
+		
+	//--- Display Trait Info
 	
 	id_traitName.innerHTML = "Trait: " + activeTraitName;
 	
@@ -173,33 +183,35 @@ function submitTraitExpression() {
 	
 	id_traitDescription.innerHTML = activeTrait.Description;
 	
-	//--- -----
+	//---
 	
 	generateQuestion();
 	
 	return false;
 }
 
-//---
+//--- ----- Trait Analysis
 
 function resetTraitAnalysis() {
-	id_traitAnalysisForm.reset();
-	
-	id_traitAnalysisOutput.innerHTML = "";
-	id_traitAnalysisOutput.style.display = "none";
-	
-	id_nextQuestion.style.display = "none";
-	
 	// clear all input/select elements in the form when a new question is generated
 	let traitAnalysisInputs = document.getElementsByClassName("class-traitAnalysisInput");
 	
-	while (traitAnalysisInputs[0])
+	while (traitAnalysisInputs[0]) {
 		id_traitAnalysisForm.removeChild(traitAnalysisInputs[0]);
+	}
 	
+	// enable interaction with Trait Analysis form elements
 	for (let el of id_traitAnalysisForm.getAllFormElements()) {
 		el.disabled = false;
 		el.style.cursor = "pointer";
 	}
+	
+	// clear and hide Trait Analysis output
+	id_traitAnalysisOutput.innerHTML = "";
+	id_traitAnalysisOutput.style.display = "none";
+	
+	// hide new question button
+	id_nextQuestion.style.display = "none";
 }
 
 var questionType;
@@ -207,8 +219,6 @@ var randomPerson;
 
 function generateQuestion() {
 	resetTraitAnalysis();
-	
-	//---
 	
 	/*
 		01 - 
@@ -223,7 +233,7 @@ function generateQuestion() {
 			break;
 		case 02: {
 			randomPerson = ped1.Family.getRandomMember();
-			console.log(randomPerson.AutosomalZygosities);
+			
 			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s phenotype for " + activeTraitName.toLowerCase() + "?";
 			
 			//---
@@ -332,6 +342,7 @@ function submitTraitAnalysis() {
 			
 			//---
 			
+			// disable interaction with Trait Analysis form
 			for (let el of id_traitAnalysisForm.getAllFormElements()) {
 				el.disabled = true;
 				el.style.cursor = "not-allowed";
