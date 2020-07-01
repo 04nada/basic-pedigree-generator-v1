@@ -24,10 +24,7 @@ eyeColor.setPrintablePhenotypes(
 	"has blue eyes"
 );
 eyeColor.setDescription(
-	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed " +
-	"do eiusmod tempor incididunt ut labore et dolore magna aliqua. " + 
-	"Ut enim ad minim veniam, quis nostrud exercitation ullamco " +
-	"laboris nisi ut aliquip ex ea commodo consequat. "
+	"A lack of melanin in the irises from a mutation results in blue eye color, compared to the usual brown."
 );
 
 const widowsPeak = new AutosomalTrait("Widow's peak", 'W', 'w', "widow's peak present", "widow's peak absent", "dominant");
@@ -36,7 +33,7 @@ widowsPeak.setPrintablePhenotypes(
 	"has no widow's peak"
 );
 widowsPeak.setDescription(
-	"describe here"
+	"A widow's peak is a point in the hairline which is V-shaped. The point can be found in the center of the forehead"
 );
 
 const tritanopia = new AutosomalTrait("Tritanopia", "T", "t", "blue-yellow colorblind", "not colorblind", "dominant");
@@ -45,9 +42,53 @@ tritanopia.setPrintablePhenotypes(
 	"is not blue-yellow colorblind"
 );
 tritanopia.setDescription(
-	"blue-yellow colorblindness"
+	"Tritanopia causes you to confuse yellow with violet and blue with green."
 );
 
+const huntingtonsDisease = new AutosomalTrait("Huntington's Disease", "H", "h", "affected by disease", "not affected by disease", "dominant");
+huntingtonsDisease.setPrintablePhenotypes(
+	"is affected by Huntington's disease",
+	"is not affected by Huntington's disease"
+);
+huntingtonsDisease.setDescription(
+	"Huntington's disease causes progressive dementia as a person enters adulthood. It mainly causes degeneration of nerve cells in the brain."
+);
+
+const marfansSyndrome = new AutosomalTrait("Marfan's Syndrome", "M", "m", "affected by trait", "not affected by trait", "dominant");
+marfansSyndrome.setPrintablePhenotypes(
+	"is affected by Marfan's Syndrome",
+	"is not affected by Marfan's Syndrome"
+);
+marfansSyndrome.setDescription(
+	"Marfan's syndrome results in abnormally long fingers and/or toes. Those affected tend to have slender bodies as well."
+);
+
+const albinism = new AutosomalTrait("Albinism", "A", "a", "not affected by trait", " affected by trait", "recessive");
+albinism.setPrintablePhenotypes(
+	"is affected by Albinism",
+	"is not affected by Albinism"
+);
+albinism.setDescription(
+	"Albinism is usually characterized by lack or absence of pigment in the hair, skin, and eyes. Due to the lack of skin pigmentation, those affected are susceptible to sunburn."
+);
+
+const corisDisease = new AutosomalTrait("Cori's Disease", "C", "c", "not affected by disease", "affected by disease", "recessive");
+corisDisease.setPrintablePhenotypes(
+	"is affected by Cori's disease",
+	"is not affected by Cori's disease"
+);
+corisDisease.setDescription(
+	"Cori's disease is usually characterized by stunted growth and build-up of glycogen in the organs."
+);
+
+const mcardlesDisease = new AutosomalTrait("McArdle's Disease", "M", "m", "affected by disease", "not affected by disease", "recessive");
+mcardlesDisease.setPrintablePhenotypes(
+	"is affected by McArdle's disease",
+	"is not affected by McArdle's disease"
+);
+mcardlesDisease.setDescription(
+	"People affected by McArdle's disease have weak muscles and can be fatigued easily."
+);
 //---  ----- HTML Elements by ID
 
 const id_traitExpressionDiv = document.getElementById("id-traitExpressionDiv");
