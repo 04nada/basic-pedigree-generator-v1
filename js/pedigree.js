@@ -230,6 +230,10 @@ function generateQuestion() {
 
 	switch (questionType) {
 		case 01:
+			notGuessed = ped1.Family.MembersBySolvableGenotype.Heterozygous.length;	
+			for (let i = 0; i < ped1.Family.MembersBySolvableGenotype.Heterozygous.length; i++){
+				ped1.Family.MembersBySolvableGenotype.Heterozygous[i].Solver.Guessed = false;
+			}
 			id_question.innerHTML = "Give the Pedigree IDs of individuals that can be determined as Heterozygous";
 			
 			let select_pedigreeIDGeneration = document.createElement("select");
@@ -285,7 +289,7 @@ function generateQuestion() {
 			break;
 		case 02: {
 			randomPerson = ped1.Family.getRandomMember();
-			
+			console.log(randomPerson.AutosomalZygosities);
 			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s phenotype for " + activeTraitName.toLowerCase() + "?";
 			
 			//---

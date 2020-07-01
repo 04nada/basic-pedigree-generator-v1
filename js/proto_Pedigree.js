@@ -36,6 +36,7 @@ Pedigree.prototype.isSolvable = function(){
 	allMembers:
 	for (let person1 of this.Family.Members1) {
 		person1.Solver = {};
+		person1.Solver.Guessed = false;
 		
 		var pheno1 = person1.AutosomalPhenotypes[this.ActiveTrait.TraitName];
 		

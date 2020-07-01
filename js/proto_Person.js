@@ -49,7 +49,6 @@ function Person(generation = 1, sex = Person.generateRandomSex()) {
 	this.AutosomalGenes = {};
 	this.AutosomalPhenotypes = {};
 	this.AutosomalZygosities = {};
-	this.Guessed = false;
 	
 	//---
 	
