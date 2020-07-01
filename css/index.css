@@ -1,4 +1,4 @@
-#id-mainDiv{
+#id-mainDiv {
 	width: 95vw;
 	height: auto;
 	display: block;
@@ -8,7 +8,7 @@
 	font-family: Lustria Regular;
 }
 
-.imgDiv{
+.imgDiv {
 	float: right;
 	text-align: center;
 	font-size: 1.5vw;
@@ -17,26 +17,26 @@
 }
 
 @media screen and (min-width: 600px) {
-	#id-mainDiv{
+	#id-mainDiv {
 		font-size: 1.5vw;
 		padding: 20px;
 	}
 	
-	.imgDiv{
+	.imgDiv {
 		width: 18vw;
 		font-size: .8vw;
 	}
 }
 
-h2{
+h2 {
 		text-align: left;
 }
 
-p{
+p {
 	text-indent:5vw;
 }
 
-.imgDiv img{
+.imgDiv img {
 	border-style: solid;
 	border-color: black;
 	border-width: 1px;
