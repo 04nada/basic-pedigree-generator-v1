@@ -4,7 +4,17 @@
 	
 	--desktop-size2: 24px;
 	--desktop-size3: 16px;
+	
+	--breakpoint: default;
 }
+
+@media screen and (min-width: 600px) {
+	:root {
+		--min-breakpoint: 600px;
+	}
+}
+
+/* --- Fonts --- */
 
 @font-face {
 	font-family: Montserrat Regular;
@@ -15,6 +25,35 @@
 	font-family: Lustria Regular;
 	src: url("../resources/fonts/Lustria-Regular.ttf");
 }
+
+/* --- Header --- */
+
+#id-header {
+	position: absolute;
+	background-color: #F93;
+	
+	top: 0;
+	height: 6vh;
+	width: 100vw;
+	padding: 0 0 0.5vh 0;
+}
+
+	#id-header div {
+		float: left;
+		color: white;
+		
+		height: 100%;
+		padding: 0.5vh 20px 0 5px;
+		
+		font-size: 3vh;
+		text-align: center;
+	}
+
+	#id-header div:hover{
+		background-color: #F70;
+	}
+	
+/* --- Body and Content --- */
 
 body {
 	margin: 9vh 0 0 0;
@@ -38,36 +77,15 @@ h3 {
 	font-size: 14px;
 }
 
-/* Header */
-
-#id-header {
-	position: absolute;
-	background-color: #FA5;
-	
-	top: 0;
-	height: 6vh;
-	width: 100vw;
-	padding: 0 0 0.5vh 0;
+div {
+	line-height: 1.2;
 }
 
-#id-header div {
-	float: left;
-	color: white;
-	
-	height: 6vh;
-	padding: 0.5vh 20px 0 5px;
-	
-	font-size: 3vh;
-	text-align: center;
-}
-
-#id-header div:hover{
-	background-color:gray;
-}
-
-/* Forms */
+/* --- Forms --- */
 
 form {
+	display: block;
+	
 	text-align: center;
 }
 
