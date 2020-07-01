@@ -80,6 +80,12 @@ Number.prototype.toRomanNumerals = function() {
 	return romanNumeral;
 }
 
+//--- ----- Strings
+
+String.prototype.trimBetter = function() {
+	return this.replace(/^\s+|\s+$/g, '');
+}
+
 //--- ----- Arrays
 
 Array.prototype.getElementFromLast = function(i) {
@@ -96,6 +102,11 @@ Array.prototype.getRandomElement = function() {
 }
 
 //--- ----- CSS
+
+HTMLDocument.prototype.getRootCSSProperty = function(property) {
+	// leading space sometimes present for no real reason
+	return window.getComputedStyle(document.body).getPropertyValue(property).trimBetter();
+}
 
 HTMLDocument.prototype.getCSSPropertyById = function(id, property) {
 	return window.getComputedStyle(document.getElementById(id), null).getPropertyValue(property);
@@ -116,5 +127,8 @@ function logDebug(source, message) {
 }
 
 //--- -----
+
+// gets current breakpoint set from univ.css, to avoid window.matchMedia
+var minBreakpoint = document.getRootCSSProperty("--min-breakpoint");
 
 {let aqua = 0;}
