@@ -107,6 +107,7 @@
 /* default; S < phone */
 #id-traitAnalysisDiv {
 	display: none;
+
 	background-color: #EEE;
 	
 	width: 90vw;
@@ -163,16 +164,16 @@
 		
 		#id-nextQuestion {
 			display: block;
-			margin: 20px auto 5px auto;
+			margin: 10px auto;
 		}
 	
 @media screen and (min-width: 600px) {
-	#id-traitAnalysisDiv {	
+	#id-traitAnalysisDiv {
+		flex-direction: row;
 		width: 80vw;
 	}
 		
 		#id-traitInfo {
-			float: left;
 			width: calc(30% - 30px);
 		}
 			
@@ -182,7 +183,6 @@
 			}
 			
 		#id-traitAnalysisForm {
-			float: right;
 			width: calc(70% - 30px);
 		}
 		
