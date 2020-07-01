@@ -226,10 +226,62 @@ function generateQuestion() {
 		03 - given a specific PedigreeID, ask for genotype
 	*/
 	
-	questionType = getRandomInteger(02, 03);
+	questionType = getRandomInteger(01, 03);
 
 	switch (questionType) {
 		case 01:
+			id_question.innerHTML = "Give the Pedigree IDs of individuals that can be determined as Heterozygous";
+			
+			let select_pedigreeIDGeneration = document.createElement("select");
+			select_pedigreeIDGeneration.setAttribute("name", "name-choicePedigreeIDGeneration");
+			select_pedigreeIDGeneration.setAttribute("class", "class-traitAnalysisInput");
+			select_pedigreeIDGeneration.setAttribute("required", "required");
+			
+			let select_pedigreeIDNumber = document.createElement("select");
+			select_pedigreeIDNumber.setAttribute("name", "name-choicePedigreeIDNumber");
+			select_pedigreeIDNumber.setAttribute("class", "class-traitAnalysisInput");
+			select_pedigreeIDNumber.setAttribute("required", "required");
+			
+			let option_blank = document.createElement("option");
+			option_blank.setAttribute("hidden", "hidden");
+			option_blank.setAttribute("disabled", "disabled");
+			option_blank.setAttribute("selected", "selected");
+			select_pedigreeIDGeneration.append(option_blank);
+			
+			let option2_blank = document.createElement("option");
+			option2_blank.setAttribute("hidden", "hidden");
+			option2_blank.setAttribute("disabled", "disabled");
+			option2_blank.setAttribute("selected", "selected");
+			select_pedigreeIDNumber.append(option2_blank);
+			
+			let options = [
+				"I",
+				"II",
+				"III",
+				"IV"
+			];
+			
+			let options2 = PedigreeIDOptions;
+			
+			for (let i = 0; i < options.length; i++) {
+				let opt = document.createElement("option");
+				opt.text = options[i];
+				opt.setAttribute("value", options[i]);
+				
+				select_pedigreeIDGeneration.append(opt);
+			}
+			
+			for (let i = 0; i < options2.length; i++) {
+				let opt = document.createElement("option");
+				opt.text = options2[i];
+				opt.setAttribute("value", options2[i]);
+				
+				select_pedigreeIDNumber.append(opt);
+			}
+			
+			id_traitAnalysisForm.insertBefore(select_pedigreeIDGeneration, id_submitTraitAnalysis);
+			id_traitAnalysisForm.insertBefore(select_pedigreeIDNumber, id_submitTraitAnalysis);
+
 			break;
 		case 02: {
 			randomPerson = ped1.Family.getRandomMember();
@@ -308,12 +360,55 @@ function generateQuestion() {
 	}
 }
 
+var notGuessed = 0;
+
 function submitTraitAnalysis() {
 	id_traitAnalysisOutput.style.display = "block";
 	
 	switch (questionType) {
 		case 01:
-			break;
+			let guessedPedigreeIDGeneration = id_traitAnalysisForm.elements["name-choicePedigreeIDGeneration"].value;
+			let guessedPedigreeIDNumber = id_traitAnalysisForm.elements["name-choicePedigreeIDNumber"].value;
+			if (ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1] == null){
+				id_traitAnalysisOutput.innerHTML = "Please choose a proper Pedigree ID";
+				return false;
+			}
+			for (let i = 0; i < ped1.Family.MembersBySolvableGenotype.Heterozygous.length; i++){
+				let person1 = ped1.Family.MembersBySolvableGenotype.Heterozygous[i]
+				if (person1.PedigreeID == guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber){
+					person1.Guessed = true;
+					let notGuessed = 0;
+					for (let j = 0; j < ped1.Family.MembersBySolvableGenotype.Heterozygous.length; j++){
+						if (!ped1.Family.MembersBySolvableGenotype.Heterozygous[j].Guessed){
+							notGuessed++;
+						}
+					}
+					
+					id_traitAnalysisOutput.innerHTML = "Correct: " + person1.PedigreeID + "'s zygosity is Heterozygous, " + notGuessed +" more to go!";
+					if (notGuessed == 0){
+						for (let el of id_traitAnalysisForm.getAllFormElements()) {
+							el.disabled = true;
+							el.style.cursor = "not-allowed";
+						}
+						break;
+					}
+					return false;
+				}
+			}
+				if(notGuessed == 0){
+					for (let el of id_traitAnalysisForm.getAllFormElements()) {
+							el.disabled = true;
+							el.style.cursor = "not-allowed";
+					}
+					break;
+				}
+				else if (ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1].AutosomalZygosities[activeTraitName] != "heterozygous"){
+					id_traitAnalysisOutput.innerHTML = "Incorrect: " + guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber + "'s zygosity is " + ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1].AutosomalZygosities[activeTraitName];
+				}
+				else{
+					id_traitAnalysisOutput.innerHTML = "Incorrect: " + guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber + "'s zygosity is " + ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1].AutosomalZygosities[activeTraitName] + " but cannot be determined";
+				}
+			return false;
 		case 02:
 			let guessedPhenotype = id_traitAnalysisForm.elements["name-choicePhenotype"].value;
 			let correctPhenotype = randomPerson.AutosomalPhenotypes[activeTraitName];

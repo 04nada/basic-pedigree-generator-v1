@@ -1,8 +1,12 @@
 //--- ----- Generating a Family
 
+var PedigreeIDOptions = [];
+
 function Family() {
 	//--- "Adam and Eve"
 	
+	PedigreeIDOptions = [];
+
 	this.Grandfather = new Person(1, "male");
 	this.Grandfather.assignRandomGenes();
 	
@@ -35,6 +39,10 @@ function Family() {
 		// set Pedigree ID for labelling purposes (I-1)
 		let temp = this.Generations[fmGeneration - 1].length + 1;
 		familyMember.PedigreeID = (fmGeneration.toRomanNumerals() + "-" + temp);
+		
+		if (temp > PedigreeIDOptions.length){
+			PedigreeIDOptions.push(temp);
+		}
 		
 		this.Generations[fmGeneration - 1].push(familyMember);
 	}

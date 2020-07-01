@@ -80,13 +80,19 @@ Number.prototype.toRomanNumerals = function() {
 	return romanNumeral;
 }
 
-//--- ----- Strings
+//--- Only up to 4
+toArabicNumeral = function(romanNumeral){
+	var romanNumerals = ["I", "II", "III", "IV"]
+	for(let i = 0; i < romanNumerals.length; i++){
+		if (romanNumeral == romanNumerals[i]){
+			return i+1;
+		}
+	}
+}//--- ----- Strings
 
 String.prototype.trimBetter = function() {
 	return this.replace(/^\s+|\s+$/g, '');
-}
-
-//--- ----- Arrays
+}//--- ----- Arrays
 
 Array.prototype.getElementFromLast = function(i) {
 	var arrayLength = this.length;
