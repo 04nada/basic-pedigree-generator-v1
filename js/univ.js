@@ -80,6 +80,16 @@ Number.prototype.toRomanNumerals = function() {
 	return romanNumeral;
 }
 
+//--- Only up to 4
+toArabicNumeral = function(romanNumeral){
+	var romanNumerals = ["I", "II", "III", "IV"]
+	for(let i = 0; i < romanNumerals.length; i++){
+		if (romanNumeral == romanNumerals[i]){
+			return i+1;
+		}
+	}
+}
+
 //--- ----- Arrays
 
 Array.prototype.getElementFromLast = function(i) {

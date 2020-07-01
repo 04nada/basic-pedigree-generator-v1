@@ -41,7 +41,7 @@ h3 {
 /* Header */
 
 #id-header {
-	position: absolute;
+	position: fixed;
 	background-color: #FA5;
 	
 	top: 0;
