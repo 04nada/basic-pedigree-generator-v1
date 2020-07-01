@@ -65,8 +65,8 @@ marfansSyndrome.setDescription(
 
 const albinism = new AutosomalTrait("Albinism", "A", "a", "not affected by trait", " affected by trait", "recessive");
 albinism.setPrintablePhenotypes(
-	"is affected by Albinism",
-	"is not affected by Albinism"
+	"is not affected by Albinism",
+	"is affected by Albinism"
 );
 albinism.setDescription(
 	"Albinism is usually characterized by lack or absence of pigment in the hair, skin, and eyes. Due to the lack of skin pigmentation, those affected are susceptible to sunburn."
@@ -74,8 +74,8 @@ albinism.setDescription(
 
 const corisDisease = new AutosomalTrait("Cori's Disease", "C", "c", "not affected by disease", "affected by disease", "recessive");
 corisDisease.setPrintablePhenotypes(
-	"is affected by Cori's disease",
-	"is not affected by Cori's disease"
+	"is not affected by Cori's disease",
+	"is affected by Cori's disease"
 );
 corisDisease.setDescription(
 	"Cori's disease is usually characterized by stunted growth and build-up of glycogen in the organs."
@@ -83,8 +83,8 @@ corisDisease.setDescription(
 
 const mcardlesDisease = new AutosomalTrait("McArdle's Disease", "M", "m", "affected by disease", "not affected by disease", "recessive");
 mcardlesDisease.setPrintablePhenotypes(
-	"is affected by McArdle's disease",
-	"is not affected by McArdle's disease"
+	"is not affected by McArdle's disease",
+	"is affected by McArdle's disease"
 );
 mcardlesDisease.setDescription(
 	"People affected by McArdle's disease have weak muscles and can be fatigued easily."
