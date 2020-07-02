@@ -41,7 +41,7 @@ Pedigree.prototype.isSolvable = function(){
 		var pheno1 = person1.AutosomalPhenotypes[this.ActiveTrait.TraitName];
 		
 		if (pheno1 === this.ActiveTrait.RecessivePhenotype) {
-			this.Family.MembersBySolvableGenotype.Recessive.push(person1);
+			this.Family.MembersBySolvableZygosity.HomozygousRecessive.push(person1);
 			person1.Solver.SolvableZygosity = "homozygous recessive";
 		} else {
 			if (person1.Father != null) {
@@ -52,7 +52,7 @@ Pedigree.prototype.isSolvable = function(){
 				// If a person with an unknown genotype has the trait (T_) but a parent does not (tt).
 				//     then the person must be heterozygous (Tt)
 				if ((phenoM === this.ActiveTrait.RecessivePhenotype ) || (phenoF === this.ActiveTrait.RecessivePhenotype )) {
-					this.Family.MembersBySolvableGenotype.Heterozygous.push(person1);
+					this.Family.MembersBySolvableZygosity.Heterozygous.push(person1);
 					person1.Solver.SolvableZygosity = "heterozygous";
 					
 					continue allMembers;
@@ -69,7 +69,7 @@ Pedigree.prototype.isSolvable = function(){
 					// If a person with an unknown genotype has the trait (T_) but a child does not (tt),
 					//     then the person must be heterozygous (Tt)
 					if (phenoC === this.ActiveTrait.RecessivePhenotype) {
-						this.Family.MembersBySolvableGenotype.Heterozygous.push(person1);
+						this.Family.MembersBySolvableZygosity.Heterozygous.push(person1);
 						person1.Solver.SolvableZygosity = "heterozygous";
 						
 						// the trait is solvable if some two parents with the same phenotype have a child with a different
@@ -86,7 +86,7 @@ Pedigree.prototype.isSolvable = function(){
 			}
 			
 			// these lines run if none of the children are recessive, since the identity being TT or Tt cannot be determined
-			this.Family.MembersBySolvableGenotype.Unknown.push(person1);
+			this.Family.MembersBySolvableZygosity.Unknown.push(person1);
 			person1.Solver.SolvableZygosity = "unknown";
 		}
 	}
