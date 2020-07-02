@@ -135,7 +135,7 @@ function logDebug(source, message) {
 //--- -----
 
 // gets current breakpoint set from univ.css, to avoid window.matchMedia
-var minBreakpoint = document.getRootCSSProperty("--breakpoint-min-width");
-var maxBreakpoint = document.getRootCSSProperty("--breakpoint-max-width");
+var breakpoint_minWidth = document.getRootCSSProperty("--breakpoint-min-width");
+var breakpoint_maxWidth = document.getRootCSSProperty("--breakpoint-max-width");
 
 {let aqua = 0;}
