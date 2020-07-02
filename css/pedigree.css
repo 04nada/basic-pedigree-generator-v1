@@ -132,8 +132,7 @@
 			padding: 10px;
 			
 			text-indent: 2em;
-			text-align: justify;
-			text-justify: auto;
+			text-align: left;
 		}
 		
 	#id-traitAnalysisForm {

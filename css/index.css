@@ -41,7 +41,7 @@
 		}
 
 			.imgDiv > img {
-				width: inherit;
+				width: 100%;
 				
 				border: 1px solid black;
 			}
