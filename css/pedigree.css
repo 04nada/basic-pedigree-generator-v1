@@ -1,3 +1,13 @@
+:root {
+	--correct-borderless-fill: #BFB;
+	--incorrect-borderless-fill: #FBB;
+	
+	--correct-border: 2px solid #6F6;
+	--correct-bordered-fill: #C0FFC0;
+	--incorrect-border: 2px solid #F66;
+	--incorrect-bordered-fill: #FFC0C0;	
+}
+
 /* ----- Pedigree Div/SVG ----- */
 
 /* default; phone_P */
@@ -78,7 +88,7 @@
 	}
 		
 	#id-traitExpressionOutput {
-		/* background-color: #FAA/#AFA; */
+		/* background-color: var(--correct-borderless-fill) || var(--incorrect-borderless-fill) */
 		
 		width: calc(100% - 30px);
 		height: auto;
@@ -109,7 +119,7 @@
 	}
 	
 		#id-traitExpressionOutput {
-			font-size: 24px;
+			font-size: 22px;
 		}
 }
 
@@ -147,7 +157,7 @@
 		}
 		
 	#id-traitAnalysisForm {
-		background-color: #FFA;
+		background-color: #FF9;
 		
 		width: calc(100% - 30px);
 		height: 100%;
@@ -158,10 +168,14 @@
 	}
 		
 		#id-traitAnalysisOutput {
+			/* background-color: var(--correct-bordered-fill) || var(--incorrect-bordered-fill); */
+			
+			width: 80%;
 			height: auto;
 		
 			margin: 20px auto;
 			padding: 15px;
+			/* border: var(--correct-border) || var(--incorrect-border); */
 			
 			font-size: 16px;
 		}
@@ -179,7 +193,7 @@
 	}
 			
 			#id-traitAnalysisOutput {
-				font-size: 24px;
+				font-size: 22px;
 			}
 }
 
@@ -203,5 +217,9 @@
 			width: calc(70% - 30px);
 			height: 100%; /* set form to use content height instead of flexbox height equality */
 		}
+		
+			#id-traitAnalysisOutput {
+				width: 90%;
+			}
 }
 	

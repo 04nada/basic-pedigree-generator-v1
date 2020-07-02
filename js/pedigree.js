@@ -30,11 +30,11 @@ window.addEventListener("resize", function() {
 		}
 	}
 	
-	// if Trait Analysis div is flex and Trait Analysis output is not visible, use content height
+	// if Trait Analysis div is flex and Trait Analysis output is not visible, set Trait Analysis form to use content height
 	if ((document.getCSSPropertyById("id-traitAnalysisDiv", "display") === "flex") && (document.getCSSPropertyById("id-traitAnalysisDiv", "display") === "none")) {
-		id_traitAnalysisDiv.style.height = "100%";
+		id_traitAnalysisForm.style.height = "100%";
 	} else {
-		id_traitAnalysisDiv.style.height = "auto";
+		id_traitAnalysisForm.style.height = "auto";
 	}
 });
 
@@ -218,10 +218,10 @@ function submitTraitExpression() {
 	const submit_expression = id_traitExpressionForm.elements["name-traitExpression"];
 	
 	if (submit_expression.value === ped1.ActiveTrait.Expression) {
-		id_traitExpressionOutput.style.backgroundColor = "#BFB";
+		id_traitExpressionOutput.style.backgroundColor = document.getRootCSSProperty("--correct-borderless-fill");
 		id_traitExpressionOutput.innerHTML = "Correct: ";
 	} else {
-		id_traitExpressionOutput.style.backgroundColor = "#FBB";
+		id_traitExpressionOutput.style.backgroundColor = document.getRootCSSProperty("--incorrect-borderless-fill");
 		id_traitExpressionOutput.innerHTML = "Incorrect: ";
 	}
 	
@@ -475,8 +475,10 @@ function submitTraitAnalysis() {
 			let guessedPedigreeIDGeneration = id_traitAnalysisForm.elements["name-choicePedigreeIDGeneration"].value;
 			let guessedPedigreeIDNumber = id_traitAnalysisForm.elements["name-choicePedigreeIDNumber"].value;
 			
-			if (ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1] == null){
-				id_traitAnalysisOutput.innerHTML = "Please choose a proper Pedigree ID";
+			if (ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1] == null) {
+				id_traitAnalysisOutput.style.backgroundColor = "transparent";
+				id_traitAnalysisOutput.style.border = "0px solid black";
+				id_traitAnalysisOutput.innerHTML = "Please choose a proper Pedigree ID.";
 				return false;
 			} else {
 				/*
@@ -486,11 +488,15 @@ function submitTraitAnalysis() {
 					person1.Solver.Guessed = true;
 					notGuessed--;
 					
+					id_traitAnalysisOutput.style.backgroundColor = document.getRootCSSProperty("--correct-bordered-fill");
+					id_traitAnalysisOutput.style.border = document.getRootCSSProperty("--correct-border");
 					id_traitAnalysisOutput.innerHTML = "Correct: " + guessedPerson.PedigreeID + "'s zygosity is Heterozygous, " + notGuessed +" more to go!";
 					
 					if (notGuessed == 0)
 						break;
 				} else {
+					id_traitAnalysisOutput.style.backgroundColor = document.getRootCSSProperty("--incorrect-bordered-fill");
+					id_traitAnalysisOutput.style.border = document.getRootCSSProperty("--incorrect-border");
 					id_traitAnalysisOutput.innerHTML = "Incorrect: " + guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber + "'s zygosity is " + guessedPerson.AutosomalZygosities[activeTraitName];
 				
 					id_traitAnalysisOutput.innerHTML += (guessedPerson.AutosomalZygosities[activeTraitName] === "heterozygous") ? " but cannot be determined." : ".";
@@ -506,6 +512,8 @@ function submitTraitAnalysis() {
 							person1.Solver.Guessed = true;
 						}
 						
+						id_traitAnalysisOutput.style.backgroundColor = document.getRootCSSProperty("--correct-bordered-fill");
+						id_traitAnalysisOutput.style.border = document.getRootCSSProperty("--correct-border");
 						id_traitAnalysisOutput.innerHTML = "Correct: " + person1.PedigreeID + "'s zygosity is Heterozygous, " + notGuessed +" more to go!";
 						
 						if (notGuessed == 0) {
@@ -519,8 +527,12 @@ function submitTraitAnalysis() {
 				if (notGuessed == 0) {
 					break;
 				} else if (ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1].AutosomalZygosities[activeTraitName] != "heterozygous"){
+					id_traitAnalysisOutput.style.backgroundColor = document.getRootCSSProperty("--incorrect-bordered-fill");
+					id_traitAnalysisOutput.style.border = document.getRootCSSProperty("--incorrect-border");
 					id_traitAnalysisOutput.innerHTML = "Incorrect: " + guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber + "'s zygosity is " + ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1].AutosomalZygosities[activeTraitName];
 				} else {
+					id_traitAnalysisOutput.style.backgroundColor = document.getRootCSSProperty("--incorrect-bordered-fill");
+					id_traitAnalysisOutput.style.border = document.getRootCSSProperty("--incorrect-border");
 					id_traitAnalysisOutput.innerHTML = "Incorrect: " + guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber + "'s zygosity is " + ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1].AutosomalZygosities[activeTraitName] + " but cannot be determined";
 				}
 				
@@ -531,6 +543,17 @@ function submitTraitAnalysis() {
 			let correctPhenotype = randomPerson.AutosomalPhenotypes[activeTraitName];
 		
 			id_traitAnalysisOutput.innerHTML = (guessedPhenotype === correctPhenotype) ? "Correct: " : "Incorrect: ";
+			
+			if (guessedPhenotype === correctPhenotype) {
+				id_traitAnalysisOutput.style.backgroundColor = document.getRootCSSProperty("--correct-bordered-fill");
+				id_traitAnalysisOutput.style.border = document.getRootCSSProperty("--correct-border");
+				id_traitAnalysisOutput.innerHTML = "Correct: ";
+			} else {
+				id_traitAnalysisOutput.style.backgroundColor = document.getRootCSSProperty("--incorrect-bordered-fill");
+				id_traitAnalysisOutput.style.border = document.getRootCSSProperty("--incorrect-border");
+				id_traitAnalysisOutput.innerHTML = "Incorrect: ";
+			}
+			
 			id_traitAnalysisOutput.innerHTML += randomPerson.PedigreeID + " " + activeTrait.getPrintablePhenotypeFromGene(randomPerson.AutosomalGenes[activeTraitName]) + ".";
 			
 			break;
@@ -538,8 +561,15 @@ function submitTraitAnalysis() {
 			let guessedZygosity = id_traitAnalysisForm.elements["name-choiceZygosity"].value;
 			let correctZygosity = randomPerson.Solver.SolvableZygosity;
 			
-			id_traitAnalysisOutput.innerHTML = (guessedZygosity === correctZygosity) ? "Correct: " : "Incorrect: ";
-			
+			if (guessedZygosity === correctZygosity) {
+				id_traitAnalysisOutput.style.backgroundColor = document.getRootCSSProperty("--correct-bordered-fill");
+				id_traitAnalysisOutput.style.border = document.getRootCSSProperty("--correct-border");
+				id_traitAnalysisOutput.innerHTML = "Correct: ";
+			} else {
+				id_traitAnalysisOutput.style.backgroundColor = document.getRootCSSProperty("--incorrect-bordered-fill");
+				id_traitAnalysisOutput.style.border = document.getRootCSSProperty("--incorrect-border");
+				id_traitAnalysisOutput.innerHTML = "Incorrect: ";
+			}
 			if (randomPerson.Solver.SolvableZygosity === "unknown")
 				id_traitAnalysisOutput.innerHTML += randomPerson.PedigreeID + "'s zygosity cannot be determined.";
 			else
