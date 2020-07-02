@@ -5,12 +5,21 @@
 	--desktop-size2: 24px;
 	--desktop-size3: 16px;
 	
-	--breakpoint: default;
+	--breakpoint-min-width: default;
+	--breakpoint-max-width: none;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 600px) and (max-width: 799px) {
 	:root {
-		--min-breakpoint: 600px;
+		--breakpoint-min-width: 600px;
+		--breakpoint-max-width: 799px;
+	}
+}
+
+@media screen and (min-width: 800px) {
+	:root {
+		--breakpoint-min-width: 800px;
+		--breakpoint-max-width: none;
 	}
 }
 
@@ -23,7 +32,7 @@
 
 @font-face {
 	font-family: Lustria Regular;
-	src: url("../resources/fonts/Lustria-Regular.ttf");
+	src: url("../assets/fonts/Lustria-Regular.ttf");
 }
 
 /* --- Header --- */
@@ -58,7 +67,9 @@
 body {
 	margin: 9vh 0 0 0;
 	padding-bottom: 100px;
+	
 	background-color: #FFE;
+	
 	font-family: "Lustria Regular";
 }
 
@@ -98,8 +109,15 @@ select, option, button {
 
 /* Float-Clear Fix */
 
-br.class-clearfix {
+.class-clearfix {
+	display: block;
 	clear: both;
+	
+	visibility: hidden;
+	
+	height: 0;
+	
+	font-size: 0;
 }
 
 @media screen and (min-width: 800px) {
