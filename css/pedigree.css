@@ -1,6 +1,6 @@
 /* ----- Pedigree Div/SVG ----- */
 
-/* default; S < phone */
+/* default; phone_P */
 #id-pedigreeDiv {
 	background-color: beige;
 	
@@ -34,23 +34,32 @@
 		cursor: pointer;
 	}
 
+/* S >= 600px; phone_L < tablet_P */
 @media screen and (min-width: 600px) {
 	#id-pedigreeDiv {
-		width: 70vw;
+		width: 80vw;
+		max-width: 575px;
 	}
 
 		#id-pedigreeSVG {
-			width: 80%;
+			width: 90%;
 			/* height: calc(2 * numberOfGenerations * symbolLength); */
 		}
 }
 
+/* S >= 800px; tablet_L < monitor */
+@media screen and (min-width: 800px) {
+	#id-pedigreeDiv {
+		width: 70vw;
+		max-width: 1100px;
+	}
+}
+
 /* ----- Trait Expression Div ----- */
 
-/* default; S < phone */
+/* default; phone_P */
 #id-traitExpressionDiv {
 	display: none;
-	/*background-color: #999;*/
 	
 	width: 80vw;
 	margin: 20px auto;
@@ -68,10 +77,6 @@
 		padding: 15px;
 	}
 		
-		#id-traitExpressionForm > select, #id-traitExpressionForm > button {
-
-		}
-		
 	#id-traitExpressionOutput {
 		/* background-color: #FAA/#AFA; */
 		
@@ -84,19 +89,25 @@
 		font-size: 16px;
 	}
 
+/* S >= 600px; phone_L < tablet_P */
 @media screen and (min-width: 600px) {
 	#id-traitExpressionDiv {
-		width: 50vw;
+		width: 70vw;
+		max-width: 450px;
 	}
 			
-		#id-traitExpressionForm {
-			
+		#id-traitExpressionOutput {
+			font-size: 20px;
 		}
-			
-			#id-traitExpressionForm select, #id-traitExpressionForm button {
+}
 
-			}
-			
+/* S >= 800px; tablet_L < monitor */
+@media screen and (min-width: 800px) {
+	#id-traitExpressionDiv {
+		width: 50vw;
+		max-width: 675px;
+	}
+	
 		#id-traitExpressionOutput {
 			font-size: 24px;
 		}
@@ -104,7 +115,7 @@
 
 /* ----- ----- */
 
-/* default; S < phone */
+/* default; phone_P */
 #id-traitAnalysisDiv {
 	display: none;
 	
@@ -146,10 +157,6 @@
 		margin: 0px;
 		padding: 15px;
 	}
-	
-		#id-question {
-			
-		}
 		
 		#id-traitAnalysisOutput {
 			height: auto;
@@ -164,12 +171,26 @@
 			display: block;
 			margin: 10px auto;
 		}
-	
+
+/* S >= 600px; phone_L < tablet_P */
 @media screen and (min-width: 600px) {
 	#id-traitAnalysisDiv {
 		width: 80vw;
+		max-width: 575px;
 	}
-		
+			
+			#id-traitAnalysisOutput {
+				font-size: 24px;
+			}
+}
+
+/* S >= 800px; tablet_L < monitor */
+@media screen and (min-width: 800px) {
+	#id-traitAnalysisDiv {
+		width: 80vw;
+		max-width: 1250px;
+	}
+	
 		#id-traitInfo {
 			width: calc(30% - 30px);
 		}
@@ -183,15 +204,5 @@
 			width: calc(70% - 30px);
 			height: 100%; /* set form to use content height instead of flexbox height equality */
 		}
-		
-			#id-question {
-				
-			}
-			
-			#id-traitAnalysisOutput {
-				font-size: 24px;
-			}
-			
-			
 }
 	
