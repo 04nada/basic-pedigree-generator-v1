@@ -193,6 +193,8 @@
 	}
 			
 			#id-traitAnalysisOutput {
+				width: 70%;
+				
 				font-size: 22px;
 			}
 }
