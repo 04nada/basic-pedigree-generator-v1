@@ -1,11 +1,9 @@
 //--- ----- Generating a Family
 
-var PedigreeIDOptions = [];
-
 function Family() {
 	//--- "Adam and Eve"
 	
-	PedigreeIDOptions = [];
+	this.PedigreeIDOptions = [];
 
 	this.Grandfather = new Person(1, "male");
 	this.Grandfather.assignRandomGenes();
@@ -40,8 +38,8 @@ function Family() {
 		let temp = this.Generations[fmGeneration - 1].length + 1;
 		familyMember.PedigreeID = (fmGeneration.toRomanNumerals() + "-" + temp);
 		
-		if (temp > PedigreeIDOptions.length){
-			PedigreeIDOptions.push(temp);
+		if (temp > this.PedigreeIDOptions.length){
+			this.PedigreeIDOptions.push(temp);
 		}
 		
 		this.Generations[fmGeneration - 1].push(familyMember);
@@ -49,10 +47,10 @@ function Family() {
 	
 	//--- Placing the Family in arrays by solvable Genotype
 	
-	this.MembersBySolvableGenotype = {
+	this.MembersBySolvableZygosity = {
 		Unknown: [],
 		Heterozygous: [],
-		Recessive: []
+		HomozygousRecessive: []
 	};
 }
 
