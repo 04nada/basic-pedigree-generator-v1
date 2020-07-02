@@ -154,7 +154,7 @@ function generatePedigree() {
 	console.log(ped1.Family.Generations);
 	
 	console.log("by Genotype: ");
-	console.log(ped1.Family.MembersBySolvableGenotype);
+	console.log(ped1.Family.MembersBySolvableZygosity);
 	
 	//--- ----- Display Trait Expression
 	
@@ -234,6 +234,16 @@ function submitTraitExpression() {
 //--- ----- Trait Analysis
 
 function resetTraitAnalysis() {
+	switch (minBreakpoint) {
+		case "600px":
+			// set form to use content height instead of flexbox height equality
+			id_traitAnalysisForm.style.height = "100%";
+			break;
+		default:
+			break;
+	}
+	
+	
 	// clear all input/select elements in the form when a new question is generated
 	let traitAnalysisInputs = document.getElementsByClassName("class-traitAnalysisInput");
 	
@@ -247,6 +257,8 @@ function resetTraitAnalysis() {
 		el.style.cursor = "pointer";
 	}
 	
+	//---
+	
 	// clear and hide Trait Analysis output
 	id_traitAnalysisOutput.innerHTML = "";
 	id_traitAnalysisOutput.style.display = "none";
@@ -255,26 +267,37 @@ function resetTraitAnalysis() {
 	id_nextQuestion.style.display = "none";
 }
 
+var questions = {
+	"01": true,
+	"02": true,
+	"03": true,
+};
 var questionType;
+
+var notGuessed;
 var randomPerson;
 
 function generateQuestion() {
 	resetTraitAnalysis();
 	
 	/*
-		01 - 
+		01 - identify PedigreeIDs of all heterozygous individuals
 		02 - given a specific PedigreeID, ask for phenotype
 		03 - given a specific PedigreeID, ask for genotype
 	*/
 	
-	questionType = getRandomInteger(01, 03);
+	do {
+		questionType = Object.keys(questions).getRandomElement();
+	} while (!(questions[questionType]));
 
 	switch (questionType) {
-		case 01:
-			notGuessed = ped1.Family.MembersBySolvableGenotype.Heterozygous.length;	
-			for (let i = 0; i < ped1.Family.MembersBySolvableGenotype.Heterozygous.length; i++){
-				ped1.Family.MembersBySolvableGenotype.Heterozygous[i].Solver.Guessed = false;
+		case "01":
+			notGuessed = ped1.Family.MembersBySolvableZygosity.Heterozygous.length;
+			
+			for (let i = 0; i < ped1.Family.MembersBySolvableZygosity.Heterozygous.length; i++){
+				ped1.Family.MembersBySolvableZygosity.Heterozygous[i].Solver.Guessed = false;
 			}
+			
 			id_question.innerHTML = "Give the Pedigree IDs of individuals that can be determined as Heterozygous";
 			
 			let select_pedigreeIDGeneration = document.createElement("select");
@@ -287,11 +310,11 @@ function generateQuestion() {
 			select_pedigreeIDNumber.setAttribute("class", "class-traitAnalysisInput");
 			select_pedigreeIDNumber.setAttribute("required", "required");
 			
-			let option_blank = document.createElement("option");
-			option_blank.setAttribute("hidden", "hidden");
-			option_blank.setAttribute("disabled", "disabled");
-			option_blank.setAttribute("selected", "selected");
-			select_pedigreeIDGeneration.append(option_blank);
+			let option1_blank = document.createElement("option");
+			option1_blank.setAttribute("hidden", "hidden");
+			option1_blank.setAttribute("disabled", "disabled");
+			option1_blank.setAttribute("selected", "selected");
+			select_pedigreeIDGeneration.append(option1_blank);
 			
 			let option2_blank = document.createElement("option");
 			option2_blank.setAttribute("hidden", "hidden");
@@ -306,7 +329,7 @@ function generateQuestion() {
 				"IV"
 			];
 			
-			let options2 = PedigreeIDOptions;
+			let options2 = ped1.Family.PedigreeIDOptions;
 			
 			for (let i = 0; i < options.length; i++) {
 				let opt = document.createElement("option");
@@ -326,12 +349,15 @@ function generateQuestion() {
 			
 			id_traitAnalysisForm.insertBefore(select_pedigreeIDGeneration, id_submitTraitAnalysis);
 			id_traitAnalysisForm.insertBefore(select_pedigreeIDNumber, id_submitTraitAnalysis);
-
+			
+			// prevent question "01" from being generated again
+			questions["01"] = false;
+			
 			break;
-		case 02: {
+		case "02": {
 			randomPerson = ped1.Family.getRandomMember();
-			console.log(randomPerson.AutosomalZygosities);
-			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s phenotype for " + activeTraitName.toLowerCase() + "?";
+
+			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s phenotype for " + activeTraitName + "?";
 			
 			//---
 			
@@ -361,12 +387,11 @@ function generateQuestion() {
 			
 			id_traitAnalysisForm.insertBefore(select_phenotype, id_submitTraitAnalysis);
 			
-			
 			break;
-		} case 03: {
+		} case "03": {
 			randomPerson = ped1.Family.getRandomMember();
 			
-			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s zygosity for " + activeTraitName.toLowerCase() + "?";
+			id_question.innerHTML = "What is " + randomPerson.PedigreeID + "'s zygosity for " + activeTraitName + "?";
 			
 			//---
 			
@@ -405,71 +430,78 @@ function generateQuestion() {
 	}
 }
 
-var notGuessed = 0;
-
 function submitTraitAnalysis() {
+	// set form to conform to flexbox height equality
+	id_traitAnalysisForm.style.height = "auto";
+	
+	// show Trait Analysis output
 	id_traitAnalysisOutput.style.display = "block";
 	
 	switch (questionType) {
-		case 01:
+		case "01":
 			let guessedPedigreeIDGeneration = id_traitAnalysisForm.elements["name-choicePedigreeIDGeneration"].value;
 			let guessedPedigreeIDNumber = id_traitAnalysisForm.elements["name-choicePedigreeIDNumber"].value;
+			
 			if (ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1] == null){
 				id_traitAnalysisOutput.innerHTML = "Please choose a proper Pedigree ID";
 				return false;
-			}
-			for (let i = 0; i < ped1.Family.MembersBySolvableGenotype.Heterozygous.length; i++){
-				let person1 = ped1.Family.MembersBySolvableGenotype.Heterozygous[i]
-				if (person1.PedigreeID == guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber){
-					person1.Guessed = true;
-					let notGuessed = 0;
-					for (let j = 0; j < ped1.Family.MembersBySolvableGenotype.Heterozygous.length; j++){
-						if (!ped1.Family.MembersBySolvableGenotype.Heterozygous[j].Guessed){
-							notGuessed++;
-						}
-					}
+			} else {
+				/*
+				let guessedPerson = ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1];
+				
+				if (guessedPerson.Solver.SolvableZygosity === "heterozygous" && !(guessedPerson.Solver.Guessed)) {
+					person1.Solver.Guessed = true;
+					notGuessed--;
 					
-					id_traitAnalysisOutput.innerHTML = "Correct: " + person1.PedigreeID + "'s zygosity is Heterozygous, " + notGuessed +" more to go!";
-					if (notGuessed == 0){
-						for (let el of id_traitAnalysisForm.getAllFormElements()) {
-							el.disabled = true;
-							el.style.cursor = "not-allowed";
-						}
+					id_traitAnalysisOutput.innerHTML = "Correct: " + guessedPerson.PedigreeID + "'s zygosity is Heterozygous, " + notGuessed +" more to go!";
+					
+					if (notGuessed == 0)
 						break;
-					}
-					return false;
+				} else {
+					id_traitAnalysisOutput.innerHTML = "Incorrect: " + guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber + "'s zygosity is " + guessedPerson.AutosomalZygosities[activeTraitName];
+				
+					id_traitAnalysisOutput.innerHTML += (guessedPerson.AutosomalZygosities[activeTraitName] === "heterozygous") ? " but cannot be determined." : ".";
 				}
-			}
-				if(notGuessed == 0){
-					for (let el of id_traitAnalysisForm.getAllFormElements()) {
-							el.disabled = true;
-							el.style.cursor = "not-allowed";
+				*/
+				
+				for (let i = 0; i < ped1.Family.MembersBySolvableZygosity.Heterozygous.length; i++) {
+					let person1 = ped1.Family.MembersBySolvableZygosity.Heterozygous[i]
+					
+					if (person1.PedigreeID == guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber) {
+						if (!(person1.Solver.Guessed)) {
+							notGuessed--;
+							person1.Solver.Guessed = true;
+						}
+						
+						id_traitAnalysisOutput.innerHTML = "Correct: " + person1.PedigreeID + "'s zygosity is Heterozygous, " + notGuessed +" more to go!";
+						
+						if (notGuessed == 0) {
+							break;
+						} else {
+							return false;
+						}
 					}
+				}
+				
+				if (notGuessed == 0) {
 					break;
-				}
-				else if (ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1].AutosomalZygosities[activeTraitName] != "heterozygous"){
+				} else if (ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1].AutosomalZygosities[activeTraitName] != "heterozygous"){
 					id_traitAnalysisOutput.innerHTML = "Incorrect: " + guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber + "'s zygosity is " + ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1].AutosomalZygosities[activeTraitName];
-				}
-				else{
+				} else {
 					id_traitAnalysisOutput.innerHTML = "Incorrect: " + guessedPedigreeIDGeneration + "-" + guessedPedigreeIDNumber + "'s zygosity is " + ped1.Family.Generations[toArabicNumeral(guessedPedigreeIDGeneration)-1][guessedPedigreeIDNumber-1].AutosomalZygosities[activeTraitName] + " but cannot be determined";
 				}
-			return false;
-		case 02:
+				
+				return false;
+			}
+		case "02":
 			let guessedPhenotype = id_traitAnalysisForm.elements["name-choicePhenotype"].value;
 			let correctPhenotype = randomPerson.AutosomalPhenotypes[activeTraitName];
 		
 			id_traitAnalysisOutput.innerHTML = (guessedPhenotype === correctPhenotype) ? "Correct: " : "Incorrect: ";
 			id_traitAnalysisOutput.innerHTML += randomPerson.PedigreeID + " " + activeTrait.getPrintablePhenotypeFromGene(randomPerson.AutosomalGenes[activeTraitName]) + ".";
 			
-			//---
-			
-			for (let el of id_traitAnalysisForm.getAllFormElements()) {
-				el.disabled = true;
-				el.style.cursor = "not-allowed";
-			}
-			
 			break;
-		case 03: {
+		case "03": {
 			let guessedZygosity = id_traitAnalysisForm.elements["name-choiceZygosity"].value;
 			let correctZygosity = randomPerson.Solver.SolvableZygosity;
 			
@@ -478,15 +510,7 @@ function submitTraitAnalysis() {
 			if (randomPerson.Solver.SolvableZygosity === "unknown")
 				id_traitAnalysisOutput.innerHTML += randomPerson.PedigreeID + "'s zygosity cannot be determined.";
 			else
-				id_traitAnalysisOutput.innerHTML += randomPerson.PedigreeID + " is " + randomPerson.Solver.SolvableZygosity + " for " + activeTraitName.toLowerCase();
-			
-			//---
-			
-			// disable interaction with Trait Analysis form
-			for (let el of id_traitAnalysisForm.getAllFormElements()) {
-				el.disabled = true;
-				el.style.cursor = "not-allowed";
-			}
+				id_traitAnalysisOutput.innerHTML += randomPerson.PedigreeID + " is " + randomPerson.Solver.SolvableZygosity + " for " + activeTraitName + ".";
 			
 			break;
 		} default:
@@ -495,6 +519,13 @@ function submitTraitAnalysis() {
 	
 	//--- -----
 	
+	// disable interaction with Trait Analysis form
+	for (let el of id_traitAnalysisForm.getAllFormElements()) {
+		el.disabled = true;
+		el.style.cursor = "not-allowed";
+	}
+	
+	// show button to generate a new question
 	id_nextQuestion.style.display = "block";
 	
 	return false;
