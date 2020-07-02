@@ -89,6 +89,7 @@ mcardlesDisease.setPrintablePhenotypes(
 mcardlesDisease.setDescription(
 	"People affected by McArdle's disease have weak muscles and can be fatigued easily."
 );
+
 //---  ----- HTML Elements by ID
 
 const id_traitExpressionDiv = document.getElementById("id-traitExpressionDiv");
@@ -206,9 +207,12 @@ function submitTraitExpression() {
 	
 	//--- ----- Display Trait Analysis
 	
-	switch (minBreakpoint) {
-		case "600px":
+	switch (breakpoint_minWidth) {
+		case "800px":
 			id_traitAnalysisDiv.style.display = "flex";
+			break;
+		case "600px":
+			id_traitAnalysisDiv.style.display = "block";
 			break;
 		default:
 			id_traitAnalysisDiv.style.display = "block";
@@ -226,6 +230,8 @@ function submitTraitExpression() {
 	
 	//---
 	
+	resetQuestions();
+	
 	generateQuestion();
 	
 	return false;
@@ -233,11 +239,25 @@ function submitTraitExpression() {
 
 //--- ----- Trait Analysis
 
+var questions = {
+	"01": true,
+	"02": true,
+	"03": true,
+};
+
+function resetQuestions() {
+	for (let type in questions) {
+		questions[type] = true;
+	}
+}
+
 function resetTraitAnalysis() {
-	switch (minBreakpoint) {
-		case "600px":
+	switch (breakpoint_minWidth) {
+		case "800px":
 			// set form to use content height instead of flexbox height equality
 			id_traitAnalysisForm.style.height = "100%";
+			break;
+		case "600px":
 			break;
 		default:
 			break;
@@ -267,11 +287,7 @@ function resetTraitAnalysis() {
 	id_nextQuestion.style.display = "none";
 }
 
-var questions = {
-	"01": true,
-	"02": true,
-	"03": true,
-};
+
 var questionType;
 
 var notGuessed;
