@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<link rel="icon" href="../resources/img/pedigreeIcon.png" />
+		<link rel="icon" href="./assets/img/pedigreeIcon.png" />
 
 		<title> Pedigrees </title>
 
@@ -38,95 +38,150 @@
 			</a>
 		</div>
 		
-		<div id = "id-mainDiv">
-			<div>
+		<div id = "id-main">
+			<article>
 				<h2> Pedigree </h2>
-				<p>
-					<div class = "imgDiv">
-						<img src = "assets/Figure1.PNG" alt = "A pedigree chart" />
-						<br />
+				
+				<div class = "imgDiv">
+					<img src = "./assets/img/Figure1.PNG" alt = "A pedigree chart" />
+					<br />
+					<p>
 						Figure 1: A Pedigree Chart
-					</div>
-				A pedigree chart is used to identify how a trait or a disease is passed on to the next generation in a family. By graphing the presence or absence of the trait in every individual of the family, it will be easier to identify if the trait is dominant or recessive. This will then make it easier to predict the offsprings of the current generation. Other than that, a thorough analysis of certain pedigrees can reveal if a trait is dominant, recessive, autosomal, or sex-linked but we will focus on pedigrees based on autosomal traits. 
-					
+					</p>
+				</div>
+				
+				<p>
+					A pedigree chart is used to identify how a trait or a disease is passed on to the next generation in a family. By graphing the presence or absence of the trait in every individual of the family, it will be easier to identify if the trait is dominant or recessive. This will then make it easier to predict the offsprings of the current generation. Other than that, a thorough analysis of certain pedigrees can reveal if a trait is dominant, recessive, autosomal, or sex-linked but we will focus on pedigrees based on autosomal traits. 
 				</p>
-			</div>
-			<div>
+				
+				<br class="class-clearfix" />
+			</article>
+			
+			<article>
 				<h2> How to read a pedigree </h2>
-					The most basic symbols in a pedigree are:
-						<div class = "imgDiv">
-							<img src = "assets/Figure2.PNG" alt = "Common pedigree symbols" />
-							<br />
-							Figure 2: Common Pedigree Symbols retrieved from <a href = "https://www.khanacademy.org/science/high-school-biology/hs-classical-genetics/hs-pedigrees/a/hs-pedigrees-review"> www.khanacademy.org </a>
-						</div>
-					<ul>  
-						<li> Square - Male </li>
-						<li> Circle - Female </li>
-						<li> Unshaded - Unaffected </li>
-						<li> Shaded - Affected </li>
-					</ul>
+				
+				<p> The most basic symbols in a pedigree are: </p>
+				
+				<div class = "imgDiv">
+					<img src = "./assets/img/Figure2.PNG" alt = "Common pedigree symbols" />
+					<br />
+					<p>
+						Figure 2: Common Pedigree Symbols retrieved from <a href = "https://www.khanacademy.org/science/high-school-biology/hs-classical-genetics/hs-pedigrees/a/hs-pedigrees-review"> www.khanacademy.org </a>
+					</p>
+				</div>
+				
+				<ul>  
+					<li> Square - Male </li>
+					<li> Circle - Female </li>
+					<li> Unshaded - Unaffected </li>
+					<li> Shaded - Affected </li>
+				</ul>
 					
 				<p>
 					Other than that, the other significant figures in a basic pedigree include the marriage line, sibling line, and line of descent. For our pedigree generator, we will only make use of the symbols mentioned above.
 				</p>
-			</div>
-			<div>
-				<h2> How to determine if a trait is dominant or recessive</h2>
-				<p>If a trait is dominant, at least one of the parents must have it in order for it to be passed on to the next generation. If a trait is recessive however, it is passed on if both parents have at least one recessive allele. That is, each parent is either heterozygous or homozygous recessive. 
-				</p>
-				<div class = "imgDiv">
-					<img src = "assets/Figure3.PNG" alt = "Heterozygous parents" />
-					<br />
-					Figure 3: Heterozygous Parents with a Homozygous Recessive Offspring
-				</div>
+				
+				<br class="class-clearfix" />
+			</article>
+			
+			<article>
+				<h2> How to determine if a trait is dominant or recessive </h2>
+				
+				<section>
+					<div class = "imgDiv">
+						<img src = "./assets/img/Figure3.PNG" alt = "Heterozygous parents" />
+						<br />
+						<p>
+							Figure 3: Heterozygous Parents with a Homozygous Recessive Offspring\
+						</p>
+					</div>
+					
 					<p>
-					Using the logic mentioned above, we can be sure that if a couple with the same phenotype had an offspring with a different phenotype, the phenotype of the offspring will always be the recessive one and that both of the parents are heterozygous. The reason behind this is that if the parents had the recessive phenotype, it is ensured that all of their offspring will also have the recessive phenotype which cannot be the case. 
-				</p>
-				<div class = "imgDiv">
-					<img src = "assets/Figure4.PNG" alt = "Heterozygous parents" />
-					<br />
-					Figure 4: A Heterozygous Parent with a Homozygous Recessive Offspring
-				</div>
-				<p>
-					If you have already determined the dominant phenotype using the technique above, there is another one that can be applied. Since a child with a recessive phenotype needs two recessive alleles, it can be concluded that both of the parents will always have at least one recessive allele so if the parent shows a dominant phenotype, his or her genotype will always be heterozygous.
-				</p>
-				<div class = "imgDiv">
-					<br />
-					<img src = "assets/Figure5.PNG" alt = "Heterozygous children" />
-					Figure 5: A Homozygous recessive parent with a heterozygous offspring
-				</div>
-				<p>
+						If a trait is dominant, at least one of the parents must have it in order for it to be passed on to the next generation. If a trait is recessive however, it is passed on if both parents have at least one recessive allele. That is, each parent is either heterozygous or homozygous recessive. 
+					</p>
+
+					<p>
+						Using the logic mentioned above, we can be sure that if a couple with the same phenotype had an offspring with a different phenotype, the phenotype of the offspring will always be the recessive one and that both of the parents are heterozygous. The reason behind this is that if the parents had the recessive phenotype, it is ensured that all of their offspring will also have the recessive phenotype which cannot be the case. 
+					</p>
 					
-					If a child with a dominant phenotype has a parent who has a recessive phenotype, we can be sure that the child is heterozygous since one parent would only be able to give a recessive allele.
-				</p>
-				<p>
-					Other than the techniques mentioned above, it would more likely be trial and error for the rest of the pedigree especially since we’ll be focusing on pedigrees based on autosomal traits only.
-				</p>
-			</div>
-			<div>
+					<br class="class-clearfix" />
+				</section>
+				
+				<section>
+					<div class = "imgDiv">
+						<img src = "./assets/img/Figure4.PNG" alt = "Heterozygous parents" />
+						<br />
+						<p>
+							Figure 4: A Heterozygous Parent with a Homozygous Recessive Offspring
+						</p>
+					</div>
+
+					<p>
+						If you have already determined the dominant phenotype using the technique above, there is another one that can be applied. Since a child with a recessive phenotype needs two recessive alleles, it can be concluded that both of the parents will always have at least one recessive allele so if the parent shows a dominant phenotype, his or her genotype will always be heterozygous.
+					</p>
+					
+					<br class="class-clearfix" />
+				</section>
+				
+				<section>
+					<div class = "imgDiv">
+						<img src = "./assets/img/Figure5.PNG" alt = "Heterozygous children" />
+						<br />
+						<p>
+							Figure 5: A Homozygous recessive parent with a heterozygous offspring
+						</p>
+					</div>
+					
+					<p>
+						If a child with a dominant phenotype has a parent who has a recessive phenotype, we can be sure that the child is heterozygous since one parent would only be able to give a recessive allele.
+					</p>
+					
+					<br class="class-clearfix" />
+				</section>
+				
+				<section>				
+					<p>
+						Other than the techniques mentioned above, it would more likely be trial and error for the rest of the pedigree especially since we’ll be focusing on pedigrees based on autosomal traits only.
+					</p>
+				</section>
+				
+				<br class="class-clearfix" />
+			</article>
+			
+			<article>
 				<h2> Pedigree ID </h2>
+				
 				<div class = "imgDiv">
-					<img src = "assets/Figure6.PNG" alt = "A pedigree chart with numbered Generations" />
+					<img src = "./assets/img/Figure6.PNG" alt = "A pedigree chart with numbered Generations" />
 					<br />
-					Figure 6: A pedigree chart with numbered Generations retrieved from <a href = "https://www.khanacademy.org/science/high-school-biology/hs-classical-genetics/hs-pedigrees/a/hs-pedigrees-review"> www.khanacademy.org </a>
+					<p>
+						Figure 6: A pedigree chart with numbered Generations retrieved from <a href = "https://www.khanacademy.org/science/high-school-biology/hs-classical-genetics/hs-pedigrees/a/hs-pedigrees-review"> www.khanacademy.org </a>
+					</p>
 				</div>
+				
 				<p>
-					
 					A pedigree ID or a pedigree identifier makes it easier to find or isolate an individual within a pedigree. A pedigree ID is based on the individual’s generation and his or her placement within the generation. For example, in this pedigree, the grandmother's pedigree ID is I-2 since she is the 2nd individual in the 1st generation. On the other hand, her only biological son has a pedigree ID of II-3, as he is the 3rd individual in the 2nd generation.
-				<br />
-				<br />
+				
+					<br /> <br />
+				
 					That’s it for the background information, so <a href="html/pedigree.html">click here</a> to go to the pedigree generator and practice your skills!
-				<br />
-				<br />
-				References:
+				</p>
+				
+				<br class="class-clearfix" />
+			</article>
+			
+			<article>
+				<h2> References: </h2>
+				
 				<ul>
-					<li>Pedigrees review (article) | Pedigrees. (n.d.). Retrieved June 20, 2020, from <a href = "https://www.khanacademy.org/science/high-school-biology/hs-classical-genetics/hs-pedigrees/a/hs-pedigrees-review">  https://www.khanacademy.org/science/high-school-biology/hs-classical-genetics/hs-pedigrees/a/hs-pedigrees-review</a>
+					<li>
+						Pedigrees review (article) | Pedigrees. (n.d.). Retrieved June 20, 2020, from <a href = "https://www.khanacademy.org/science/high-school-biology/hs-classical-genetics/hs-pedigrees/a/hs-pedigrees-review">  https://www.khanacademy.org/science/high-school-biology/hs-classical-genetics/hs-pedigrees/a/hs-pedigrees-review</a>
 					</li>
-					<li>Table of Genetic Disorders(n.d.). Retrieved July 01, 2020, from <a href="https://www.kumc.edu/AMA-MSS/Study/table_of_genetic_disorders.htm"> https://www.kumc.edu/AMA-MSS/Study/table_of_genetic_disorders.htm </a>
+					<li>
+						Table of Genetic Disorders(n.d.). Retrieved July 01, 2020, from <a href="https://www.kumc.edu/AMA-MSS/Study/table_of_genetic_disorders.htm"> https://www.kumc.edu/AMA-MSS/Study/table_of_genetic_disorders.htm </a>
 					</li>
 				</ul>
-				</p>
-			</div>
+			</article>
 		</div>
 		
 		<!-- JS Scripts (end) -->
