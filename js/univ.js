@@ -138,4 +138,9 @@ function logDebug(source, message) {
 var breakpoint_minWidth = document.getRootCSSProperty("--breakpoint-min-width");
 var breakpoint_maxWidth = document.getRootCSSProperty("--breakpoint-max-width");
 
+window.addEventListener("resize", function() {
+	breakpoint_minWidth = document.getRootCSSProperty("--breakpoint-min-width");
+	breakpoint_maxWidth = document.getRootCSSProperty("--breakpoint-max-width");
+});
+
 {let aqua = 0;}

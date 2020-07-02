@@ -7,13 +7,35 @@ $(document).ready(function() {
 	// alert(SYMBOL_LENGTH_px);
 });
 
-// resize SVG when device is rotated
-window.addEventListener("orientationchange", function(){
-	setTimeout(function() {
-		SYMBOL_LENGTH_px = parseFloat(document.getCSSPropertyById("id-pedigreeSVG", "width")) / 28.0;
-		
-		id_pedigreeSVG.style.height = (2 * MAX_GENERATION * SYMBOL_LENGTH_px) + "px";
-	}, 1000);
+window.addEventListener("resize", function() {
+	SYMBOL_LENGTH_px = parseFloat(document.getCSSPropertyById("id-pedigreeSVG", "width")) / 28.0;
+	
+	id_pedigreeSVG.style.height = (2 * MAX_GENERATION * SYMBOL_LENGTH_px) + "px";
+	
+	//--- 
+	
+	//--- Resize Trait Analysis
+	
+	if (document.getCSSPropertyById("id-traitAnalysisDiv", "display") !== "none") {
+		switch (breakpoint_minWidth) {
+			case "800px":
+				id_traitAnalysisDiv.style.display = "flex";
+				break;
+			case "600px":
+				id_traitAnalysisDiv.style.display = "block";
+				break;
+			default:
+				id_traitAnalysisDiv.style.display = "block";
+				break;
+		}
+	}
+	
+	// if Trait Analysis div is flex and Trait Analysis output is not visible, use content height
+	if ((document.getCSSPropertyById("id-traitAnalysisDiv", "display") === "flex") && (document.getCSSPropertyById("id-traitAnalysisDiv", "display") === "none")) {
+		id_traitAnalysisDiv.style.height = "100%";
+	} else {
+		id_traitAnalysisDiv.style.height = "auto";
+	}
 });
 
 //--- ----- Autosomal Traits
@@ -252,17 +274,10 @@ function resetQuestions() {
 }
 
 function resetTraitAnalysis() {
-	switch (breakpoint_minWidth) {
-		case "800px":
-			// set form to use content height instead of flexbox height equality
-			id_traitAnalysisForm.style.height = "100%";
-			break;
-		case "600px":
-			break;
-		default:
-			break;
+	if (document.getCSSPropertyById("id-traitAnalysisDiv", "display") === "flex") {
+		// if (display: flex), set form to use content height over flexbox height equality
+		id_traitAnalysisForm.style.height = "100%";
 	}
-	
 	
 	// clear all input/select elements in the form when a new question is generated
 	let traitAnalysisInputs = document.getElementsByClassName("class-traitAnalysisInput");
@@ -447,8 +462,10 @@ function generateQuestion() {
 }
 
 function submitTraitAnalysis() {
-	// set form to conform to flexbox height equality
-	id_traitAnalysisForm.style.height = "auto";
+	if (document.getCSSPropertyById("id-traitAnalysisDiv", "display") === "flex") {
+		// if (display: flex), set form to conform to flexbox height equality
+		id_traitAnalysisForm.style.height = "auto";
+	}
 	
 	// show Trait Analysis output
 	id_traitAnalysisOutput.style.display = "block";
