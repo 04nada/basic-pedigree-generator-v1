@@ -96,7 +96,6 @@ Person.prototype.PRIV_assignZygosities = function() {
 	}
 	
 	this.AutosomalZygosities = autosomalZygosities;
-	console.log(this.AutosomalZygosities);
 }
 
 Person.prototype.PRIV_assignPhenotypes = function() {
