@@ -161,7 +161,6 @@ Person.prototype.tryToMarry = function() {
 		//logDebug("Person.pt.tryToMarry()", "Solo person chose not to get married.");
 		this.Partner = null;
 		this.Children = null;
-		//putangina nitong linya na to ilang oras kong di mahanap kung bakit ayaw gumana ng code
 		
 		return false;
 	}

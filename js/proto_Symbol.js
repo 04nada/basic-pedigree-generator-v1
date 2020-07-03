@@ -4,7 +4,7 @@ var SYMBOL_LENGTH_px = parseFloat(document.getCSSPropertyById("id-pedigreeSVG", 
 
 function Symbol(person, activeTrait, x = 0) {
 	if (!(activeTrait.TraitName in DefinedAutosomalTraits)) {
-		logError(this.name, "Cannot draw symbol for undefined trait.");
+		logError("Symbol()", "Cannot draw symbol for undefined trait.");
 	} else {
 		personSex = person.Sex;
 		personActivePhenotype = person.AutosomalPhenotypes[activeTrait.TraitName];

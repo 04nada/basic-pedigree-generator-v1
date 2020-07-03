@@ -130,7 +130,7 @@ Pedigree.prototype.layoutFamily = function(person1) {
 
 Pedigree.prototype.layoutMarriage = function(partner1, partner2) {
 	if ((partner1.Partner !== partner2) || (partner2.Partner !== partner1)) {
-		logError("Pedigree.layoutMarriage()", "Persons chosen to draw symbols are not married.");
+		logError("Pedigree.pt.layoutMarriage()", "Persons chosen to draw symbols are not married.");
 	} else {
 		symbol1 = partner1.Symbol;
 		symbol2 = partner2.Symbol;
@@ -157,9 +157,9 @@ Pedigree.prototype.layoutMarriage = function(partner1, partner2) {
 
 Pedigree.prototype.layoutChildren = function(parent1, parent2) {
 	if ((parent1.Partner !== parent2) || (parent2.Partner !== parent1)) {
-		logError("Pedigree.layoutChildren()", "Persons chosen to layout children of are not married.");
+		logError("Pedigree.pt.layoutChildren()", "Persons chosen to layout children of are not married.");
 	} else if (parent1.Children == null || parent1.Children.length === 0) {
-		logError("Pedigree.layoutChildren()", "Persons chosen do not have any children to layout.");
+		logError("Pedigree.pt.layoutChildren()", "Persons chosen do not have any children to layout.");
 		return;
 	} else {
 		symbol1 = parent1.Symbol;
@@ -377,7 +377,7 @@ Pedigree.prototype.PRIV_adjustFrom = function(person, dx) {
 
 Pedigree.prototype.drawMarriage = function(partner1, partner2) {
 	if ((partner1.Partner !== partner2) || (partner2.Partner !== partner1)) {
-		logError("Symbol.layoutMarriage()", "Persons chosen to draw symbols are not married.");
+		logError("Pedigree.pt.drawMarriage()", "Persons chosen to draw symbols are not married.");
 	} else {	
 		symbol1 = partner1.Symbol;
 		symbol2 = partner2.Symbol;
@@ -395,7 +395,7 @@ Pedigree.prototype.drawMarriage = function(partner1, partner2) {
 
 Pedigree.prototype.drawChildren = function(parent1, parent2) {
 	if ((parent1.Partner !== parent2) || (parent2.Partner !== parent1)) {
-		logError("Symbol.layoutChildren()", "Persons chosen to draw symbols are not married.");
+		logError("Pedigree.pt.drawChildren()", "Persons chosen to draw symbols are not married.");
 	} else {
 		symbol1 = parent1.Symbol;
 		symbol2 = parent2.Symbol;

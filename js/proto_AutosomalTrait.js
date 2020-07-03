@@ -67,7 +67,7 @@ AutosomalTrait.prototype.PRIV_generateRandomGene = function() {
 
 AutosomalTrait.prototype.getZygosityFromGene = function(gene) {
 	if (gene.toLowerCase() !== (this.RecessiveAllele + this.RecessiveAllele)) {
-		logError("AutosomalTrait.getPhenotypeFromGene()", "Gene is invalid and cannot give a phenotype.");
+		logError("AutosomalTrait.pt.getZygosityFromGene()", "Gene is invalid and cannot give a phenotype.");
 	} else {
 		if (gene.toUpperCase() === gene)
 			return "homozygous dominant";
@@ -80,7 +80,7 @@ AutosomalTrait.prototype.getZygosityFromGene = function(gene) {
 
 AutosomalTrait.prototype.getPhenotypeFromGene = function(gene) {
 	if (gene.toLowerCase() !== (this.RecessiveAllele + this.RecessiveAllele)) {
-		logError("AutosomalTrait.getPhenotypeFromGene()", "Gene is invalid and cannot give a phenotype.");
+		logError("AutosomalTrait.pt.getPhenotypeFromGene()", "Gene is invalid and cannot give a phenotype.");
 	} else {
 		if (gene.toLowerCase() === gene)
 			return this.RecessivePhenotype;
@@ -91,7 +91,7 @@ AutosomalTrait.prototype.getPhenotypeFromGene = function(gene) {
 
 AutosomalTrait.prototype.getPrintablePhenotypeFromGene = function(gene) {
 		if (gene.toLowerCase() !== (this.RecessiveAllele + this.RecessiveAllele)) {
-		logError("AutosomalTrait.getPrintablePhenotypeFromGene()", "Gene is invalid and cannot give a phenotype.");
+		logError("AutosomalTrait.pt.getPrintablePhenotypeFromGene()", "Gene is invalid and cannot give a phenotype.");
 	} else {
 		if (gene.toLowerCase() === gene)
 			return this.PrintablePhenotypes.Recessive;
