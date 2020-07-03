@@ -49,6 +49,7 @@
 			.imgDiv > p {
 				margin: 0px;
 				
+				text-indent: 0;
 				text-align: center;
 			}
 
